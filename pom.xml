@@ -35,6 +35,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Start: mysql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- End: mysql -->
+
     </dependencies>
 
     <build>
