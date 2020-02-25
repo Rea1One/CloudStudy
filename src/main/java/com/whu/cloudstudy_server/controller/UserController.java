@@ -19,9 +19,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/findUser")
-    public Response findUser(int id){
+    public Response findUser(Integer id) {
         Response response;
-        User user=userService.findUserById(id);
+        User user = userService.findUserById(id);
         if (user == null) {
             response = new Response(-1, "失败", null);
             return response;
@@ -31,37 +31,37 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public Response login(String email,String password){
+    public Response login(String email, String password) {
         Response response;
         User user = userService.findUserByEmail(email);
         if (user == null) {
             response = new Response(-2, "邮箱不存在", null);
             return response;
         }
-        if(!password.equals(user.getPassword())){
-            response=new Response(-1,"密码错误",null);
+        if (!password.equals(user.getPassword())) {
+            response = new Response(-1, "密码错误", null);
             return response;
         }
         user.setPassword(null);
         int i;
-        String before=user.getEmail();
-        String after=before.substring(0,3);
-        for(i=3;i<before.length();i++){
-            if(before.charAt(i)=='@') break;
-            after+="*";
+        String before = user.getEmail();
+        String after = before.substring(0, 3);
+        for (i = 3; i < before.length(); i++) {
+            if (before.charAt(i) == '@') break;
+            after += "*";
         }
-        after+=before.substring(i);
+        after += before.substring(i);
         user.setEmail(after);
         response = new Response(0, "登录成功", user);
         return response;
     }
 
     @PostMapping(value = "/modifyUserInfo")
-    public Response modifyUserInfo(int id,int type,String content){
+    public Response modifyUserInfo(Integer id, Integer type, String content) {
         Response response;
-        User user=userService.findUserById(id);
+        User user = userService.findUserById(id);
         if (user != null) {
-            switch(type) {
+            switch (type) {
                 case 0: // 修改用户名
                     user.setName(content);
                     break;
@@ -80,18 +80,21 @@ public class UserController {
             }
             userService.updateUserInfo(user);
             response = new Response(0, "成功", null);
-        }
-        else {
+        } else {
             response = new Response(-1, "失败", null);
         }
         return response;
     }
 
     @PostMapping(value = "/changePassword")
-    public Response changePassword(int id,String oldPassword,String newPassword){
+    public Response changePassword(Integer id, String oldPassword, String newPassword) {
         Response response;
-        User user=userService.findUserById(id);
-        if(!oldPassword.equals(user.getPassword())){
+        User user = userService.findUserById(id);
+        if (user == null) {
+            response = new Response(-2, "用户不存在", null);
+            return response;
+        }
+        if (!oldPassword.equals(user.getPassword())) {
             response = new Response(-1, "旧密码错误", null);
             return response;
         }

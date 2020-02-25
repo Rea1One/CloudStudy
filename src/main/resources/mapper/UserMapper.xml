@@ -27,6 +27,8 @@
             <if test="name!=null">name = #{name},</if>
             <if test="age!=null">age = #{age},</if>
             <if test="signature!=null">signature = #{signature},</if>
+            <if test="password!=null">password = #{password},</if>
+            <if test="sex!=null">sex = #{sex},</if>
         </trim>
         where id = #{id}
     </update>

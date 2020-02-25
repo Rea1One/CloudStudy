@@ -4,6 +4,7 @@ import com.whu.cloudstudy_server.entity.User;
 import com.whu.cloudstudy_server.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -32,5 +33,6 @@ public class UserService {
         userMapper.deleteUser(id);
     }
 
+    @Transactional
     public void updateUserInfo(User user) { userMapper.updateUserInfo(user); }
 }
