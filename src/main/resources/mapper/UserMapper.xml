@@ -12,10 +12,6 @@
         select * from User where email = #{email}
     </select>
 
-    <select id="findUserByName" resultType="com.whu.cloudstudy_server.entity.User">
-        select * from User where name = #{name}
-    </select>
-
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.User">
         insert into User (name, password, sex, age, signature, email)
         values (#{name}, #{password}, #{sex}, #{age}, #{signature}, #{email})
