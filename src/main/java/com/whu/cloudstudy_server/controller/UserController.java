@@ -26,6 +26,7 @@ public class UserController {
             response = new Response(-1, "失败", null);
             return response;
         }
+        processInfo(user);
         response = new Response(0, "成功", user);
         return response;
     }
@@ -42,16 +43,7 @@ public class UserController {
             response = new Response(-1, "密码错误", null);
             return response;
         }
-        user.setPassword(null);
-        int i;
-        String before = user.getEmail();
-        String after = before.substring(0, 3);
-        for (i = 3; i < before.length(); i++) {
-            if (before.charAt(i) == '@') break;
-            after += "*";
-        }
-        after += before.substring(i);
-        user.setEmail(after);
+        processInfo(user);
         response = new Response(0, "登录成功", user);
         return response;
     }
@@ -102,5 +94,19 @@ public class UserController {
         userService.updateUserInfo(user);
         response = new Response(0, "修改成功", null);
         return response;
+    }
+
+    //处理返回用户信息 隐藏密码和邮箱
+    private void processInfo(User user){
+        user.setPassword(null);
+        int i;
+        String before = user.getEmail();
+        String after = before.substring(0, 3);
+        for (i = 3; i < before.length(); i++) {
+            if (before.charAt(i) == '@') break;
+            after += "*";
+        }
+        after += before.substring(i);
+        user.setEmail(after);
     }
 }
