@@ -41,7 +41,8 @@ public class ValidateCodeService {
         Integer randomCode = random.nextInt(999999) % 900000 + 100000;
 
         // 发送邮件
-        boolean isSuccess = emailUtil.sendMessage(email, "cloud study yan zheng ma", randomCode.toString());
+        String content = randomCode.toString();
+        boolean isSuccess = emailUtil.sendMessage(email, "【云自习室】验证", content);
         if (!isSuccess) {  // 邮件发送失败
             return -3;
         }

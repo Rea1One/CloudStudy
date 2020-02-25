@@ -10,9 +10,9 @@ import java.util.Properties;
  * @date 2020-02-24
  */
 public class EmailUtil {
-    private String from = "whucloudstudy@yeah.net";
+    private String from = "liulangbaobei@yeah.net";
 
-    private String password = "2020yunzixi";
+    private String password = "llbbguanyou2019";
 
     private String host = "smtp.yeah.net";
 
@@ -46,6 +46,8 @@ public class EmailUtil {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setContent(content, "text/html;charset=UTF-8");
+
+
             Transport.send(message);
             System.out.println("邮件发送成功！");
             System.out.println("详情: To " + to + " " + message.getSubject());
