@@ -10,11 +10,11 @@ import java.util.Properties;
  * @date 2020-02-24
  */
 public class EmailUtil {
-    private String from = "liulangbaobei@yeah.net";
+    private String from = "1301702486@qq.com";
 
-    private String password = "llbbguanyou2019";
+    private String password = "dupebescahumgfcc";
 
-    private String host = "smtp.yeah.net";
+    private String host = "smtp.qq.com";
 
     private Properties properties = System.getProperties();
 
