@@ -43,7 +43,7 @@ public class ValidateCodeController {
     }
 
     @PostMapping(value = "/register")
-    public Response register(String name, String password, Character gender,
+    public Response register(String name, String password, Integer gender,
                              String introduction, String email, Integer code, Integer age) {
         int ret = codeService.register(name, password, gender, introduction, email, code, age);
         Response response;

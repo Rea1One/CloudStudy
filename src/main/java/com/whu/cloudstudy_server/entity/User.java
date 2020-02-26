@@ -11,7 +11,7 @@ public class User {
     private Integer id;
     private String name;
     private String password;
-    private Character sex;
+    private Integer sex;
     private Integer age;
     private String signature;
     private String email;
@@ -43,11 +43,11 @@ public class User {
         this.password = password;
     }
 
-    public Character getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Character sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

@@ -63,7 +63,7 @@ public class ValidateCodeService {
      * @return
      */
     @Transactional
-    public int register(String name, String password, Character gender,
+    public int register(String name, String password, Integer gender,
                         String introduction, String email, Integer code, Integer age) {
         boolean isMatch = false;
         // 逆序遍历codeMap找到发给该邮箱的验证码

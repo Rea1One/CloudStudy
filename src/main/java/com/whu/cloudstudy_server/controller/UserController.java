@@ -58,7 +58,7 @@ public class UserController {
                     user.setName(content);
                     break;
                 case 1: // 修改性别
-                    user.setSex(content.charAt(0));
+                    user.setSex(Integer.parseInt(content));
                     break;
                 case 2: // 修改年龄
                     user.setAge(Integer.parseInt(content));
