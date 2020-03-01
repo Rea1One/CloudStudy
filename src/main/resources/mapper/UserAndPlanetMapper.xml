@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whu.cloudstudy_server.mapper.UserAndPlanetMapper">
+
+    <select id="findPlanetByUserId" resultType="com.whu.cloudstudy_server.entity.Planet">
+        select * from Planet where id =
+            (select planetId from UserAndPlanet where userId = #{userId})
+    </select>
+
+    <insert id="insertUserAndPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.UserAndPlanet">
+        insert into UserAndPlanet (userId, planetId)
+        values (#{userId}, #{planetId})
+    </insert>
+
+    <delete id="deleteUserAndPlanet" parameterType="java.lang.Integer">
+        delete from UserAndPlanet where id = #{id}
+    </delete>
+
+</mapper>
