@@ -13,7 +13,7 @@ import java.util.List;
 
 @Mapper
 public interface UserAndPlanetMapper {
-    //List<Planet> findPlanetByUserId(Integer userId);
+//    List<Planet> findPlanetByUserId(Integer userId);
     void insertUserAndPlanet(UserAndPlanet userAndPlanet);
     void deleteUserAndPlanet(UserAndPlanet userAndPlanet);
 }
