@@ -29,6 +29,7 @@
             <if test="signature!=null">signature = #{signature},</if>
             <if test="password!=null">password = #{password},</if>
             <if test="sex!=null">sex = #{sex},</if>
+            <if test="studyTime!=null">studyTime = #{studyTime},</if>
         </trim>
         where id = #{id}
     </update>
