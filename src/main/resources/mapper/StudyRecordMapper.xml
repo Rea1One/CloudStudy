@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whu.cloudstudy_server.mapper.StudyRecordMapper">
+
+    <insert id="insertStudyRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into StudyRecord (userId, planetId, operation)
+        values (#{userId}, #{planetId}, #{operation})
+    </insert>
+
+    <delete id="deletePlanet" parameterType="java.lang.Integer">
+        delete from Planet where id = #{id}
+    </delete>
+
+    <update id="updatePlanetInfo" parameterType="com.whu.cloudstudy_server.entity.Planet">
+        update Planet
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">name = #{name},</if>
+            <if test="introduction!=null">introduction = #{introduction},</if>
+            <if test="population!=null">population = #{population},</if>
+            <if test="password!=null">password = #{password},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="findLatestStudyRecordByUserId">
+        select * from StudyRecord where userId = #{userId} order by ${time} desc limit 1
+    </select>
+
+    <select id="findAllByUserIdAndTimeBetween">
+        select * from StudyRecord where userId = #{userId} and time between #{startTime} and #{stopTime}
+    </select>
+</mapper>
