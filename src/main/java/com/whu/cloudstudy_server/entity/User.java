@@ -8,16 +8,33 @@ import java.sql.Timestamp;
  */
 
 public class User {
-    private Integer id;
-    private String name;
-    private String password;
-    private Integer sex;
-    private Integer age;
-    private String signature;
-    private String email;
-    private String photo;
-    private Integer studyTime;
-    private Timestamp registerTime;
+    protected Integer id;
+    protected String name;
+    protected String password;
+    protected Integer sex;
+    protected Integer age;
+    protected String signature;
+    protected String email;
+    protected String photo;
+    protected Integer studyTime;
+    protected Timestamp registerTime;
+
+    public User() {
+    }
+
+    public User(Integer id, String name, String password, Integer sex, Integer age,
+                String signature, String email, String photo, Integer studyTime, Timestamp registerTime) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.sex = sex;
+        this.age = age;
+        this.signature = signature;
+        this.email = email;
+        this.photo = photo;
+        this.studyTime = studyTime;
+        this.registerTime = registerTime;
+    }
 
     public Integer getId() {
         return id;

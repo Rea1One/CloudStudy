@@ -12,24 +12,24 @@
         select * from Planet where code = #{code}
     </select>
 
-    <select id="findPlanetByName">
-
+    <select id="findPlanetByName" resultType="com.whu.cloudstudy_server.entity.Planet">
+        select * from Planet where name = #{name}
     </select>
 
     <select id="findPlanetByGalaxy" resultType="com.whu.cloudstudy_server.entity.Planet">
         select * from Planet where galaxy = #{galaxy} limit #{batchNum},10
     </select>
 
-    <insert id="insertPlanet" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.Planet">
         insert into Planet (code, creatorId, name, category, galaxy, introduction, password)
         values (#{code}, #{creatorId}, #{name}, #{category}, #{galaxy}, #{introduction}, #{password})
     </insert>
 
-    <delete id="deletePlanet">
+    <delete id="deletePlanet" parameterType="java.lang.Integer">
         delete from Planet where id = #{id}
     </delete>
 
-    <update id="updatePlanetInfo">
+    <update id="updatePlanetInfo" parameterType="com.whu.cloudstudy_server.entity.Planet">
         update Planet
         <trim prefix="set" suffixOverrides=",">
             <if test="name!=null">name = #{name},</if>

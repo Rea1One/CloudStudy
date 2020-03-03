@@ -4,28 +4,17 @@
 
 <mapper namespace="com.whu.cloudstudy_server.mapper.StudyRecordMapper">
 
-    <insert id="insertStudyRecord" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertStudyRecord" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.StudyRecord">
         insert into StudyRecord (userId, planetId, operation)
         values (#{userId}, #{planetId}, #{operation})
     </insert>
 
-    <delete id="deletePlanet" parameterType="java.lang.Integer">
-        delete from Planet where id = #{id}
-    </delete>
+    <select id="findLatestStudyRecordByUserIdAndPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
+        select * from StudyRecord where userId = #{userId} and planetId = #{planetId} order by time desc limit 1
+    </select>
 
-    <update id="updatePlanetInfo" parameterType="com.whu.cloudstudy_server.entity.Planet">
-        update Planet
-        <trim prefix="set" suffixOverrides=",">
-            <if test="name!=null">name = #{name},</if>
-            <if test="introduction!=null">introduction = #{introduction},</if>
-            <if test="population!=null">population = #{population},</if>
-            <if test="password!=null">password = #{password},</if>
-        </trim>
-        where id = #{id}
-    </update>
-
-    <select id="findLatestStudyRecordByUserId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
-        select * from StudyRecord where userId = #{userId} order by time desc limit 1
+    <select id="findLatestStudyRecordByUserIdAndOperation" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
+        select * from StudyRecord where userId = #{userId} and operation = #{operation} order by time desc limit 1
     </select>
 
     <select id="findStudyRecordByPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">

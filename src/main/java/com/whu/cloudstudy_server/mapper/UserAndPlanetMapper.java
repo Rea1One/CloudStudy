@@ -1,6 +1,7 @@
 package com.whu.cloudstudy_server.mapper;
 
 import com.whu.cloudstudy_server.entity.Planet;
+import com.whu.cloudstudy_server.entity.User;
 import com.whu.cloudstudy_server.entity.UserAndPlanet;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Mapper
 public interface UserAndPlanetMapper {
     List<Planet> findPlanetByUserId(Integer userId);
+    List<User> findAllUserByPlanetId(Integer planetId);
     void insertUserAndPlanet(UserAndPlanet userAndPlanet);
     void deleteUserAndPlanet(UserAndPlanet userAndPlanet);
 }

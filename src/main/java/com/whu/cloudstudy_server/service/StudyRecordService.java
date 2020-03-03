@@ -17,10 +17,6 @@ public class StudyRecordService {
     @Autowired(required = false)
     private StudyRecordMapper studyRecordMapper;
 
-    public StudyRecord findLatestStudyRecordByUserId(Integer userId){
-        return studyRecordMapper.findLatestStudyRecordByUserId(userId);
-    }
-
     public List<StudyRecord> findStudyRecordByPlanetId(Integer planetId, Integer batchNum){
         return studyRecordMapper.findStudyRecordByPlanetId(planetId,batchNum);
     }
