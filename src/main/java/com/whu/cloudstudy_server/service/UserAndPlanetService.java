@@ -1,5 +1,5 @@
 package com.whu.cloudstudy_server.service;
-//import com.whu.cloudstudy_server.entity.Planet;
+import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.UserAndPlanet;
 import com.whu.cloudstudy_server.mapper.UserAndPlanetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ public class UserAndPlanetService {
     @Autowired(required = false)
     private UserAndPlanetMapper userAndPlanetMapper;
 
-//    public List<Planet> findPlanetByUserId(Integer userId){
-//      return userAndPlanetMapper.findPlanetByUserId(userId);
-//    }
+    public List<Planet> findPlanetByUserId(Integer userId){
+      return userAndPlanetMapper.findPlanetByUserId(userId);
+    }
 
     public void insertUserAndPlanet(UserAndPlanet userAndPlanet){
         userAndPlanetMapper.insertUserAndPlanet(userAndPlanet);

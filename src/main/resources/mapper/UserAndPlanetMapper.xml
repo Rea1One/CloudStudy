@@ -5,8 +5,15 @@
 <mapper namespace="com.whu.cloudstudy_server.mapper.UserAndPlanetMapper">
 
     <select id="findPlanetByUserId" resultType="com.whu.cloudstudy_server.entity.Planet">
-        select * from Planet where id =
-            (select planetId from UserAndPlanet where userId = #{userId})
+        select p.*
+        from Planet p,UserAndPlanet uap
+        where p.id = uap.planetId and uap.userId = #{userId}
+    </select>
+
+    <select id="findUserByPlanetId" resultType="com.whu.cloudstudy_server.entity.User">
+        select u.*
+        from User u,UserAndPlanet uap
+        where u.id = uap.userId and uap.planetId = #{planetId}
     </select>
 
     <insert id="insertUserAndPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.UserAndPlanet">

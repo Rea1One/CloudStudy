@@ -1,10 +1,14 @@
 package com.whu.cloudstudy_server.controller;
 
 import com.whu.cloudstudy_server.Response;
+import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.User;
+import com.whu.cloudstudy_server.service.UserAndPlanetService;
 import com.whu.cloudstudy_server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -93,6 +97,22 @@ public class UserController {
         user.setPassword(newPassword);
         userService.updateUserInfo(user);
         response = new Response(0, "修改成功", null);
+        return response;
+    }
+
+    @Autowired
+    private UserAndPlanetService userAndPlanetService;
+
+    @PostMapping(value = "/queryAllPlanet")
+    public Response queryAllPlanet(Integer id) {
+        Response response;
+        List<Planet> planets = userAndPlanetService.findPlanetByUserId(id);
+        if(planets==null){
+            response = new Response(-1, "失败", null);
+            return response;
+        }
+        for(Planet p:planets) p.setPassword(null);
+        response = new Response(0, "成功", planets);
         return response;
     }
 
