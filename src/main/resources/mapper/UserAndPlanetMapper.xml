@@ -14,6 +14,7 @@
         select u.*
         from User u, UserAndPlanet uap
         where uap.planetId = #{planetId} and u.id = uap.userId
+        order by uap.enterTime asc
     </select>
 
     <insert id="insertUserAndPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.UserAndPlanet">
