@@ -18,4 +18,5 @@ public interface UserAndPlanetMapper {
     List<User> findAllUserByPlanetId(Integer planetId);
     void insertUserAndPlanet(UserAndPlanet userAndPlanet);
     void deleteUserAndPlanet(UserAndPlanet userAndPlanet);
+    void deleteUAPByUserIdAndPlanetId(Integer userId, Integer planetId);
 }

@@ -22,6 +22,7 @@ public class PlanetController {
     @Autowired
     private PlanetServiceGuo planetService;
 
+    // 搜索星球
     @PostMapping(value = "/searchPlanet")
     public Response searchPlanet(String keyword) {
         Response response;
@@ -34,8 +35,16 @@ public class PlanetController {
         return response;
     }
 
+    // 进入星球
     @PostMapping(value = "/planet/enterPlanet")
-    public Response enterPlanet(Integer id) {
-        return planetService.enterPlanet(id);
+    public Response enterPlanet(Integer planetId, Integer userId) {
+        return planetService.enterPlanet(planetId, userId);
+    }
+
+    // 退出星球
+    @PostMapping(value = "/leavePlanet")
+    public Response leavePlanet(Integer planetId, Integer userId) {
+        planetService.leavePlanet(planetId, userId);
+        return new Response(0, "成功", null);
     }
 }

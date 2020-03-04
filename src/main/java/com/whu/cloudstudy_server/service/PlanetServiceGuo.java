@@ -40,24 +40,43 @@ public class PlanetServiceGuo {
         }
     }
 
-    public Response enterPlanet(Integer id) {
+    public Response enterPlanet(Integer planetId, Integer userId) {
         Response response;
-        List<User> users = uapMapper.findAllUserByPlanetId(id);
-        if (users.size() == 0) {
+        List<User> users = uapMapper.findAllUserByPlanetId(planetId);
+        Planet currPlanet = planetMapper.findPlanetById(planetId);
+        if (users.size() == 0 || currPlanet == null) {
             response = new Response(-1, "星球不存在", null);
             return response;
         }
+        List<Object> retData = new LinkedList<>();
+
+        // 判断当前用户是否在该星球内
+        List<Planet> planets = uapMapper.findPlanetByUserId(userId);
+        boolean isInside = false;
+        for (Planet planet : planets) {
+            if (planet.getId().equals(currPlanet.getId())) {
+                isInside = true;
+                break;
+            }
+        }
+        if (isInside) {  // 在星球内
+            retData.add(1);
+        } else {  // 不在星球内
+            retData.add(0);
+        }
+
         List<CustomizedUser> cUsers = new LinkedList<>();
+
+        // 获取每个用户的自习状态
         for (User user : users) {
-            StudyRecord record = recordMapper.findLatestStudyRecordByUserIdAndPlanetId(user.getId(), id);
+            StudyRecord record = recordMapper.findLatestStudyRecordByUserIdAndPlanetId(user.getId(), planetId);
             if (record == null) {
                 CustomizedUser cUser = new CustomizedUser(user.getId(), user.getName(), null,
                         user.getSex(), user.getAge(), user.getSignature(), user.getEmail(),
                         user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "未自习");
                 processInfo(cUser);
                 cUsers.add(cUser);
-            }
-            else {
+            } else {
                 Integer status = record.getOperation();
                 if (status.equals(0)) {  // 自习中
                     long currTime = System.currentTimeMillis();
@@ -90,8 +109,14 @@ public class PlanetServiceGuo {
             response = new Response(-2, "获取用户列表失败", null);
             return response;
         }
-        response = new Response(0, "成功", cUsers);
+        retData.add(cUsers);
+        response = new Response(0, "成功", retData);
         return response;
+    }
+
+    // 退出星球
+    public void leavePlanet(Integer planetId, Integer userId) {
+        uapMapper.deleteUAPByUserIdAndPlanetId(planetId, userId);
     }
 
     //处理返回用户信息 隐藏密码和邮箱
