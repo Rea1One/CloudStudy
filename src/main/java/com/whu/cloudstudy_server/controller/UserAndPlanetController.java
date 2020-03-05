@@ -57,11 +57,10 @@ public class UserAndPlanetController {
             if(password==null){
                 response = new Response(-2, "请输入密码", null);
                 return response;
-            }else {
-                if(planet.getPassword()!=password){
-                    response = new Response(-3, "密码错误", null);
-                    return response;
-                }
+            }
+            else if(password.intValue()!=planet.getPassword().intValue()){
+                response = new Response(-3, "密码错误", null);
+                return response;
             }
         }
         UserAndPlanet userAndPlanet = new UserAndPlanet();
