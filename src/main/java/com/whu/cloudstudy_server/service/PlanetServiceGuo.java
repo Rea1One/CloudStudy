@@ -36,6 +36,7 @@ public class PlanetServiceGuo {
             result.add(singleResult);
             return result;
         } else {
+            keyword = "%" + keyword + "%";
             return planetMapper.findPlanetByName(keyword);
         }
     }
@@ -73,7 +74,7 @@ public class PlanetServiceGuo {
             if (record == null) {
                 CustomizedUser cUser = new CustomizedUser(user.getId(), user.getName(), null,
                         user.getSex(), user.getAge(), user.getSignature(), user.getEmail(),
-                        user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "未自习");
+                        user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "休息中");
                 processInfo(cUser);
                 cUsers.add(cUser);
             } else {
