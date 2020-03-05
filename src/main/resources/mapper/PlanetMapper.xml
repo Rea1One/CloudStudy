@@ -13,7 +13,7 @@
     </select>
 
     <select id="findPlanetByName" resultType="com.whu.cloudstudy_server.entity.Planet">
-        select * from Planet where name = #{name}
+        select * from Planet where name like #{name}
     </select>
 
     <select id="findPlanetByGalaxy" resultType="com.whu.cloudstudy_server.entity.Planet">

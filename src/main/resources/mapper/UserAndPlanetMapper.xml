@@ -26,7 +26,7 @@
     </delete>
 
     <delete id="deleteUAPByUserIdAndPlanetId">
-        delete from UserAndPlanet where userId = #{userId} and planetId = {planetId}
+        delete from UserAndPlanet where userId = #{userId} and planetId = #{planetId}
     </delete>
 
 </mapper>
