@@ -16,6 +16,10 @@
         where uap.planetId = #{planetId} and u.id = uap.userId order by uap.enterTime asc
     </select>
 
+    <select id="findUAPByPlanetIdAndUserId" resultType="com.whu.cloudstudy_server.entity.UserAndPlanet">
+        select * from UserAndPlanet where planetId = #{planetId} and userId = #{userId}
+    </select>
+
     <insert id="insertUserAndPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.UserAndPlanet">
         insert into UserAndPlanet (userId, planetId)
         values (#{userId}, #{planetId})
@@ -23,10 +27,6 @@
 
     <delete id="deleteUserAndPlanet" parameterType="java.lang.Integer">
         delete from UserAndPlanet where id = #{id}
-    </delete>
-
-    <delete id="deleteUAPByUserIdAndPlanetId">
-        delete from UserAndPlanet where userId = #{userId} and planetId = #{planetId}
     </delete>
 
 </mapper>

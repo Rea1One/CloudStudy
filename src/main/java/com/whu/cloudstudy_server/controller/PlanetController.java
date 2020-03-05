@@ -1,7 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
 import com.whu.cloudstudy_server.Response;
-import com.whu.cloudstudy_server.entity.CustomizedUser;
 import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.service.PlanetServiceGuo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,22 @@ public class PlanetController {
     // 退出星球
     @PostMapping(value = "/leavePlanet")
     public Response leavePlanet(Integer planetId, Integer userId) {
-        planetService.leavePlanet(planetId, userId);
-        return new Response(0, "成功", null);
+        Response response;
+        int ret = planetService.leavePlanet(planetId, userId);
+        switch (ret) {
+            case 0:
+                response = new Response(0, "成功", null);
+                break;
+            case -1:
+                response = new Response(-1, "记录不存在", null);
+                break;
+            case -2:
+                response = new Response(-2, "删除记录失败", null);
+                break;
+            default:
+                response = new Response(-3, "失败", null);
+                break;
+        }
+        return response;
     }
 }

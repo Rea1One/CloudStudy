@@ -24,19 +24,19 @@ public class ValidateCodeController {
         Response response;
         switch (ret) {
             case 0:
-                response = new Response(0,"成功",null);
+                response = new Response(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1,"邮箱重复",null);
+                response = new Response(-1, "邮箱重复", null);
                 break;
             case -2:
-                response = new Response(-2,"用户不存在",null);
+                response = new Response(-2, "用户不存在", null);
                 break;
             case -3:
-                response = new Response(-3,"验证码发送失败",null);
+                response = new Response(-3, "验证码发送失败", null);
                 break;
             default:
-                response = new Response(-4,"失败",null);
+                response = new Response(-4, "失败", null);
                 break;
         }
         return response;
@@ -49,13 +49,16 @@ public class ValidateCodeController {
         Response response;
         switch (ret) {
             case 0:
-                response = new Response(0,"成功",null);
+                response = new Response(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1,"验证码错误",null);
+                response = new Response(-1, "验证码错误", null);
+                break;
+            case -2:
+                response = new Response(-2, "插入用户数据失败", null);
                 break;
             default:
-                response = new Response(-2,"失败",null);
+                response = new Response(-3, "失败", null);
                 break;
         }
         return response;
@@ -67,13 +70,13 @@ public class ValidateCodeController {
         Response response;
         switch (ret) {
             case 0:
-                response = new Response(0,"成功",null);
+                response = new Response(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1,"验证码错误",null);
+                response = new Response(-1, "验证码错误", null);
                 break;
             default:
-                response = new Response(-2,"失败",null);
+                response = new Response(-2, "失败", null);
                 break;
         }
         return response;

@@ -16,7 +16,7 @@ import java.util.List;
 public interface UserAndPlanetMapper {
     List<Planet> findPlanetByUserId(Integer userId);
     List<User> findAllUserByPlanetId(Integer planetId);
-    void insertUserAndPlanet(UserAndPlanet userAndPlanet);
-    void deleteUserAndPlanet(UserAndPlanet userAndPlanet);
-    void deleteUAPByUserIdAndPlanetId(Integer userId, Integer planetId);
+    UserAndPlanet findUAPByPlanetIdAndUserId(Integer planetId, Integer userId);
+    int insertUserAndPlanet(UserAndPlanet userAndPlanet);
+    int deleteUserAndPlanet(UserAndPlanet userAndPlanet);
 }

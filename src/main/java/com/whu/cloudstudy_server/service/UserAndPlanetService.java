@@ -4,6 +4,7 @@ import com.whu.cloudstudy_server.entity.UserAndPlanet;
 import com.whu.cloudstudy_server.mapper.UserAndPlanetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,11 +22,13 @@ public class UserAndPlanetService {
       return userAndPlanetMapper.findPlanetByUserId(userId);
     }
 
-    public void insertUserAndPlanet(UserAndPlanet userAndPlanet){
-        userAndPlanetMapper.insertUserAndPlanet(userAndPlanet);
+    @Transactional
+    public int insertUserAndPlanet(UserAndPlanet userAndPlanet){
+        return userAndPlanetMapper.insertUserAndPlanet(userAndPlanet);
     }
 
-    public void deleteUserAndPlanet(UserAndPlanet userAndPlanet){
-        userAndPlanetMapper.deleteUserAndPlanet(userAndPlanet);
+    @Transactional
+    public int deleteUserAndPlanet(UserAndPlanet userAndPlanet){
+        return userAndPlanetMapper.deleteUserAndPlanet(userAndPlanet);
     }
 }

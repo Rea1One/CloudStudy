@@ -25,16 +25,16 @@ public class UserAndPlanetController {
     @PostMapping(value = "/queryAllPlanet")
     public Response queryAllPlanet(Integer galaxy, Integer batchNum) {
         Response response;
-        List<Planet> planets = planetService.findPlanetByGalaxy(galaxy,batchNum*10);
-        if(planets==null){
+        List<Planet> planets = planetService.findPlanetByGalaxy(galaxy, batchNum * 10);
+        if (planets == null) {
             response = new Response(-2, "失败", null);
             return response;
         }
-        if(planets.isEmpty()){
+        if (planets.isEmpty()) {
             response = new Response(-1, "无更多数据", null);
             return response;
         }
-        for(Planet p:planets) p.setPassword(null);
+        for (Planet p : planets) p.setPassword(null);
         response = new Response(0, "成功", planets);
         return response;
     }
@@ -48,17 +48,16 @@ public class UserAndPlanetController {
     @PostMapping(value = "/joinPlanet")
     public Response joinPlanet(Integer userId, Integer planetId, @Nullable Integer password) {
         Response response;
-        Planet planet=planetService.findPlanetById(planetId);
-        if(planet==null){
+        Planet planet = planetService.findPlanetById(planetId);
+        if (planet == null) {
             response = new Response(-1, "失败", null);
             return response;
         }
-        if(planet.getCategory()==1){
-            if(password==null){
+        if (planet.getCategory() == 1) {
+            if (password == null) {
                 response = new Response(-2, "请输入密码", null);
                 return response;
-            }
-            else if(password.intValue()!=planet.getPassword().intValue()){
+            } else if (password.intValue() != planet.getPassword().intValue()) {
                 response = new Response(-3, "密码错误", null);
                 return response;
             }
@@ -66,10 +65,18 @@ public class UserAndPlanetController {
         UserAndPlanet userAndPlanet = new UserAndPlanet();
         userAndPlanet.setUserId(userId);
         userAndPlanet.setPlanetId(planetId);
-        userAndPlanetService.insertUserAndPlanet(userAndPlanet);
-        int n=planet.getPopulation()+1;
+        int cnt1 = userAndPlanetService.insertUserAndPlanet(userAndPlanet);
+        if (cnt1 <= 0) {
+            response = new Response(-4, "插入用户-星球关系数据失败", null);
+            return response;
+        }
+        int n = planet.getPopulation() + 1;
         planet.setPopulation(n);
-        planetService.updatePlanetInfo(planet);
+        int cnt2 = planetService.updatePlanetInfo(planet);
+        if (cnt2 <= 0) {
+            response = new Response(-5, "更新星球信息失败", null);
+            return response;
+        }
         response = new Response(0, "加入成功", null);
         return response;
     }
@@ -81,22 +88,22 @@ public class UserAndPlanetController {
     private UserService userService;
 
     @PostMapping(value = "/getPlanetFeed")
-    public Response getPlanetFeed(Integer id, Integer batchNum){
+    public Response getPlanetFeed(Integer id, Integer batchNum) {
         Response response;
-        List<List<Object>> result= new ArrayList<>();
-        List<StudyRecord> studyRecords=studyRecordService.findStudyRecordByPlanetId(id,batchNum*10);
-        if(studyRecords==null){
+        List<List<Object>> result = new ArrayList<>();
+        List<StudyRecord> studyRecords = studyRecordService.findStudyRecordByPlanetId(id, batchNum * 10);
+        if (studyRecords == null) {
             response = new Response(-2, "失败", null);
             return response;
         }
-        if(studyRecords.isEmpty()){
+        if (studyRecords.isEmpty()) {
             response = new Response(-1, "无更多数据", null);
             return response;
         }
-        for(StudyRecord sr:studyRecords){
-            User user=userService.findUserById(sr.getUsreId());
+        for (StudyRecord sr : studyRecords) {
+            User user = userService.findUserById(sr.getUsreId());
             processInfo(user);
-            List<Object> item=new ArrayList<>();
+            List<Object> item = new ArrayList<>();
             item.add(user);
             item.add(sr.getTime());
             item.add(sr.getOperation());
@@ -107,7 +114,7 @@ public class UserAndPlanetController {
     }
 
     //处理返回用户信息 隐藏密码和邮箱
-    private void processInfo(User user){
+    private void processInfo(User user) {
         user.setPassword(null);
         int i;
         String before = user.getEmail();

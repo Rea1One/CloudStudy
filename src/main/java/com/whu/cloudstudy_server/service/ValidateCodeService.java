@@ -87,8 +87,13 @@ public class ValidateCodeService {
         user.setSignature(introduction);
         user.setEmail(email);
         user.setAge(age);
-        userMapper.insertUser(user);
-        return 0;
+        int cnt = userMapper.insertUser(user);
+        if (cnt > 0) {
+            return 0;
+        }
+        else {
+            return -2;  // 插入用户数据失败
+        }
     }
 
     public int validateCode(String email, Integer code) {

@@ -25,14 +25,16 @@ public class UserService {
         return userMapper.findUserByEmail(email);
     }
 
-    public void insertUser(User user) {
-        userMapper.insertUser(user);
-    }
-
-    public void deleteUser(Integer id) {
-        userMapper.deleteUser(id);
+    @Transactional
+    public int insertUser(User user) {
+        return userMapper.insertUser(user);
     }
 
     @Transactional
-    public void updateUserInfo(User user) { userMapper.updateUserInfo(user); }
+    public int deleteUser(Integer id) {
+        return userMapper.deleteUser(id);
+    }
+
+    @Transactional
+    public int updateUserInfo(User user) { return userMapper.updateUserInfo(user); }
 }

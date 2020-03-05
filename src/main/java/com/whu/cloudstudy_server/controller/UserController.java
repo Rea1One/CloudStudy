@@ -74,10 +74,14 @@ public class UserController {
                     response = new Response(-1, "失败", null);
                     return response;
             }
-            userService.updateUserInfo(user);
-            response = new Response(0, "成功", null);
+            int cnt = userService.updateUserInfo(user);
+            if (cnt > 0) {
+                response = new Response(0, "成功", null);
+            } else {
+                response = new Response(-2, "更新用户信息失败", null);
+            }
         } else {
-            response = new Response(-1, "失败", null);
+            response = new Response(-3, "用户不存在", null);
         }
         return response;
     }
@@ -95,7 +99,11 @@ public class UserController {
             return response;
         }
         user.setPassword(newPassword);
-        userService.updateUserInfo(user);
+        int cnt = userService.updateUserInfo(user);
+        if (cnt <= 0) {
+            response = new Response(-3, "更新用户信息失败", null);
+            return response;
+        }
         response = new Response(0, "修改成功", null);
         return response;
     }
@@ -107,17 +115,17 @@ public class UserController {
     public Response queryAllPlanet(Integer id) {
         Response response;
         List<Planet> planets = userAndPlanetService.findPlanetByUserId(id);
-        if(planets==null){
+        if (planets == null) {
             response = new Response(-1, "失败", null);
             return response;
         }
-        for(Planet p:planets) p.setPassword(null);
+        for (Planet p : planets) p.setPassword(null);
         response = new Response(0, "成功", planets);
         return response;
     }
 
     //处理返回用户信息 隐藏密码和邮箱
-    private void processInfo(User user){
+    private void processInfo(User user) {
         user.setPassword(null);
         int i;
         String before = user.getEmail();

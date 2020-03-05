@@ -20,8 +20,14 @@ public class StudyRecordController {
 
     @PostMapping(value = "/start")
     public Response startStudy(Integer userId, Integer planetId) {
-        recordService.startStudy(userId, planetId);
-        return new Response(0, "成功", null);
+        Response response;
+        int cnt = recordService.startStudy(userId, planetId);
+        if (cnt > 0) {
+            response = new Response(0, "成功", null);
+        } else {
+            response = new Response(-1, "插入记录失败", null);
+        }
+        return response;
     }
 
     @PostMapping(value = "/stop")
@@ -38,8 +44,14 @@ public class StudyRecordController {
             case -2:
                 response = new Response(-2, "用户没有开始学习的记录", null);
                 break;
+            case -3:
+                response = new Response(-3, "插入学习记录数据失败", null);
+                break;
+            case -4:
+                response = new Response(-4, "更新用户学习时间失败", null);
+                break;
             default:
-                response = new Response(-3, "失败", null);
+                response = new Response(-5, "失败", null);
                 break;
         }
         return response;

@@ -15,7 +15,7 @@ public interface UserMapper {
     User findUserById(Integer id);
     User findUserByEmail(String email);
     List<User> findUserByName(String name);
-    void insertUser(User user);
-    void deleteUser(Integer id);
-    void updateUserInfo(User user);
+    int insertUser(User user);
+    int deleteUser(Integer id);
+    int updateUserInfo(User user);
 }

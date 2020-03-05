@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2020-03-02
  */
 public interface StudyRecordMapper {
-    void insertStudyRecord(StudyRecord record);
+    int insertStudyRecord(StudyRecord record);
     StudyRecord findLatestStudyRecordByUserIdAndPlanetId(Integer userId, Integer planetId);  // 查询某个用户的学习状态
     StudyRecord findLatestStudyRecordByUserIdAndOperation(Integer userId, Integer operation);
     List<StudyRecord> findStudyRecordByPlanetId(Integer planetId, Integer batchNum);   //查询某个星球中的用户动态

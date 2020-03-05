@@ -23,24 +23,41 @@ public class StudyRecordServiceGuo {
     private UserMapper userMapper;
 
     /* 0开始, 1结束 */
+
+    /**
+     * 开始学习
+     *
+     * @param userId
+     * @param planetId
+     * @return 插入StudyRecord的记录条数
+     */
     @Transactional
-    public void startStudy(Integer userId, Integer planetId) {
+    public int startStudy(Integer userId, Integer planetId) {
         StudyRecord record = new StudyRecord();
         record.setOperation(0);
         record.setPlanetId(planetId);
         record.setUsreId(userId);
-        recordMapper.insertStudyRecord(record);
+        return recordMapper.insertStudyRecord(record);
     }
 
+    /**
+     * 结束学习
+     *
+     * @param userId
+     * @param planetId
+     * @return 错误/成功代码
+     */
     @Transactional
     public int stopStudy(Integer userId, Integer planetId) {
         StudyRecord stopRecord = new StudyRecord();
         stopRecord.setOperation(1);
         stopRecord.setPlanetId(planetId);
         stopRecord.setUsreId(userId);
-        stopRecord.setTime(new Timestamp(System.currentTimeMillis()));
-        recordMapper.insertStudyRecord(stopRecord);  // Bug here. Time is null.
-
+        stopRecord.setTime(new Timestamp(System.currentTimeMillis()));  // Bug here. Time will be null without this statement.
+        int cntRecord = recordMapper.insertStudyRecord(stopRecord);
+        if (cntRecord <= 0) {
+            return -3;  // 插入学习记录数据失败
+        }
         // 更改用户表学习时长
         User user = userMapper.findUserById(userId);
         if (user == null) {
@@ -54,7 +71,11 @@ public class StudyRecordServiceGuo {
         Integer studyTime = Math.toIntExact(mSec) / 60000;
         Integer prevStudyTime = user.getStudyTime();
         user.setStudyTime(prevStudyTime + studyTime);
-        userMapper.updateUserInfo(user);
-        return 0;
+        int cntUser = userMapper.updateUserInfo(user);
+        if (cntUser > 0) {  // 成功
+            return 0;
+        } else {
+            return -4;  // 更新用户学习时间失败
+        }
     }
 }

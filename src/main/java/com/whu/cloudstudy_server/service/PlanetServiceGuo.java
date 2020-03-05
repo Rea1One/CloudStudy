@@ -1,17 +1,14 @@
 package com.whu.cloudstudy_server.service;
 
 import com.whu.cloudstudy_server.Response;
-import com.whu.cloudstudy_server.entity.CustomizedUser;
-import com.whu.cloudstudy_server.entity.Planet;
-import com.whu.cloudstudy_server.entity.StudyRecord;
-import com.whu.cloudstudy_server.entity.User;
+import com.whu.cloudstudy_server.entity.*;
 import com.whu.cloudstudy_server.mapper.PlanetMapper;
 import com.whu.cloudstudy_server.mapper.StudyRecordMapper;
 import com.whu.cloudstudy_server.mapper.UserAndPlanetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,8 +113,18 @@ public class PlanetServiceGuo {
     }
 
     // 退出星球
-    public void leavePlanet(Integer planetId, Integer userId) {
-        uapMapper.deleteUAPByUserIdAndPlanetId(planetId, userId);
+    @Transactional
+    public int leavePlanet(Integer planetId, Integer userId) {
+        UserAndPlanet target = uapMapper.findUAPByPlanetIdAndUserId(planetId, userId);
+        if (target == null) {
+            return -1;  // 记录不存在
+        }
+        int cnt = uapMapper.deleteUserAndPlanet(target);
+        if (cnt > 0) {
+            return 0;  // 成功
+        } else {
+            return -2;  // 删除记录失败
+        }
     }
 
     //处理返回用户信息 隐藏密码和邮箱
