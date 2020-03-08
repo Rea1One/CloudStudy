@@ -33,11 +33,28 @@ public class StudyRecordServiceGuo {
      */
     @Transactional
     public int startStudy(Integer userId, Integer planetId) {
+        StudyRecord startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
+        StudyRecord stopRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
+        if (startRecord != null && stopRecord == null) {
+            return -1;  // 已开始自习
+        }
+        if (startRecord != null && stopRecord != null) {
+            long startTime = startRecord.getTime().getTime();
+            long stopTime = stopRecord.getTime().getTime();
+            if (startTime > stopTime) {
+                return -1;  // 已开始自习
+            }
+        }
         StudyRecord record = new StudyRecord();
         record.setOperation(0);
         record.setPlanetId(planetId);
         record.setUsreId(userId);
-        return recordMapper.insertStudyRecord(record);
+        int cnt =  recordMapper.insertStudyRecord(record);
+        if (cnt > 0) {
+            return 0;
+        } else {
+            return -2;  // 插入记录失败
+        }
     }
 
     /**

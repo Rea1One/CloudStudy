@@ -21,11 +21,20 @@ public class StudyRecordController {
     @PostMapping(value = "/start")
     public Response startStudy(Integer userId, Integer planetId) {
         Response response;
-        int cnt = recordService.startStudy(userId, planetId);
-        if (cnt > 0) {
-            response = new Response(0, "成功", null);
-        } else {
-            response = new Response(-1, "插入记录失败", null);
+        int ret = recordService.startStudy(userId, planetId);
+        switch (ret) {
+            case 0:
+                response = new Response(0, "成功", null);
+                break;
+            case -1:
+                response = new Response(-1, "已开始自习", null);
+                break;
+            case -2:
+                response = new Response(-2, "插入记录失败", null);
+                break;
+            default:
+                response = new Response(-3, "失败", null);
+                break;
         }
         return response;
     }

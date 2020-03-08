@@ -77,27 +77,27 @@ public class PlanetServiceGuo {
             } else {
                 Integer status = record.getOperation();
                 if (status.equals(0)) {  // 自习中
-                    long currTime = System.currentTimeMillis();
+                    long currTime = System.currentTimeMillis() + 8 * 60 * 60000;
                     long mSec = currTime - record.getTime().getTime();
                     int minutes = Math.toIntExact(mSec) / 60000;
                     int h = minutes / 60;
                     int m = minutes % 60;
-                    String statusInfo = "已自习";
+                    String statusInfo = "已自习 ";
                     if (h == 0) {
                         statusInfo += m;
                     } else {
-                        statusInfo = statusInfo + h + "小时" + m;
+                        statusInfo = statusInfo + h + "h" + m;
                     }
-                    statusInfo += "分钟";
+                    statusInfo += "min";
                     CustomizedUser cUser = new CustomizedUser(user.getId(), user.getName(), null,
                             user.getSex(), user.getAge(), user.getSignature(), user.getEmail(),
                             user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), statusInfo);
                     processInfo(cUser);
                     cUsers.add(cUser);
-                } else if (status.equals(1)) {  // 未自习
+                } else if (status.equals(1)) {  // 休息中
                     CustomizedUser cUser = new CustomizedUser(user.getId(), user.getName(), null,
                             user.getSex(), user.getAge(), user.getSignature(), user.getEmail(),
-                            user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "未自习");
+                            user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "休息中");
                     processInfo(cUser);
                     cUsers.add(cUser);
                 }
