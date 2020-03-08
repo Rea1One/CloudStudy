@@ -70,7 +70,7 @@ public class StudyRecordServiceGuo {
         stopRecord.setOperation(1);
         stopRecord.setPlanetId(planetId);
         stopRecord.setUsreId(userId);
-        stopRecord.setTime(new Timestamp(System.currentTimeMillis()));  // Bug here. Time will be null without this statement.
+        stopRecord.setTime(new Timestamp(System.currentTimeMillis() + 8 * 60 * 60000));  // Bug here. Time will be null without this statement.
         int cntRecord = recordMapper.insertStudyRecord(stopRecord);
         if (cntRecord <= 0) {
             return -3;  // 插入学习记录数据失败
