@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * @author 郭瑞景
- * @date 2020-02-24
+ * Author: 郭瑞景
+ * Date: 2020-02-24
  */
 
 @Mapper

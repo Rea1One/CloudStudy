@@ -5,8 +5,8 @@ import com.whu.cloudstudy_server.entity.User;
 import java.sql.Timestamp;
 
 /**
- * @author 郭瑞景
- * @date 2020-03-03
+ * Author: 郭瑞景
+ * Date: 2020-03-03
  */
 public class CustomizedUser extends User {
     private String statusInfo;

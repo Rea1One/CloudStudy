@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.service;
 
-import com.whu.cloudstudy_server.EmailUtil;
+import com.whu.cloudstudy_server.util.EmailUtil;
 import com.whu.cloudstudy_server.entity.User;
 import com.whu.cloudstudy_server.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 /**
- * @author 郭瑞景
- * @date 2020-02-24
+ * Author: 郭瑞景
+ * Date: 2020-02-24
  */
 
 @Service

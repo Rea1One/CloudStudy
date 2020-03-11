@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 
 /**
- * @author 郭瑞景
- * @date 2020-03-03
+ * Author: 郭瑞景
+ * Date: 2020-03-03
  */
 
 @Service
@@ -66,6 +66,18 @@ public class StudyRecordServiceGuo {
      */
     @Transactional
     public int stopStudy(Integer userId, Integer planetId) {
+        StudyRecord startRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
+        StudyRecord stopRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
+        if (startRecord1 == null && stopRecord1 == null) {
+            return -5;  // 未开始自习
+        }
+        if (startRecord1 != null && stopRecord1 != null) {
+            long startTime = startRecord1.getTime().getTime();
+            long stopTime = stopRecord1.getTime().getTime();
+            if (startTime < stopTime) {
+                return -5;  // 未开始自习
+            }
+        }
         StudyRecord stopRecord = new StudyRecord();
         stopRecord.setOperation(1);
         stopRecord.setPlanetId(planetId);

@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
-import com.whu.cloudstudy_server.Response;
+import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.StudyRecord;
 import com.whu.cloudstudy_server.entity.User;

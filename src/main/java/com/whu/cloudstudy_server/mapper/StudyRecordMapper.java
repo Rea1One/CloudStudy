@@ -6,8 +6,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @author 郭瑞景
- * @date 2020-03-02
+ * Author: 郭瑞景
+ * Date: 2020-03-02
  */
 public interface StudyRecordMapper {
     int insertStudyRecord(StudyRecord record);

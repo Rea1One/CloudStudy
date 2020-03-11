@@ -3,8 +3,8 @@ package com.whu.cloudstudy_server.entity;
 import java.sql.Timestamp;
 
 /**
- * @author 叶瑞雯
- * @date 2020-02-29
+ * Author: 叶瑞雯
+ * Date: 2020-02-29
  */
 
 public class UserAndPlanet {

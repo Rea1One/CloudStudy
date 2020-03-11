@@ -30,6 +30,7 @@
             <if test="password!=null">password = #{password},</if>
             <if test="sex!=null">sex = #{sex},</if>
             <if test="studyTime!=null">studyTime = #{studyTime},</if>
+            <if test="photo!=null">photo = #{photo},</if>
         </trim>
         where id = #{id}
     </update>

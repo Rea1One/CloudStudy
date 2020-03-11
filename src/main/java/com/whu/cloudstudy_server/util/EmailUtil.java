@@ -1,4 +1,4 @@
-package com.whu.cloudstudy_server;
+package com.whu.cloudstudy_server.util;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -6,8 +6,8 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 /**
- * @author 郭瑞景
- * @date 2020-02-24
+ * Author: 郭瑞景
+ * Date: 2020-02-24
  */
 public class EmailUtil {
     private String from = "1301702486@qq.com";

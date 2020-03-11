@@ -1,5 +1,9 @@
-package com.whu.cloudstudy_server;
+package com.whu.cloudstudy_server.util;
 
+/**
+ * Author: 郭瑞景
+ * Date: 2020-02-24
+ */
 public class Response<T> {
     private Integer code;
     private String message;

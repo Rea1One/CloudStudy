@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
-import com.whu.cloudstudy_server.Response;
+import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author 郭瑞景
- * @date 2020-02-24
+ * Author: 郭瑞景
+ * Date: 2020-02-24
  */
 
 @RestController

@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.service;
 
-import com.whu.cloudstudy_server.Response;
+import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.*;
 import com.whu.cloudstudy_server.mapper.PlanetMapper;
 import com.whu.cloudstudy_server.mapper.StudyRecordMapper;
@@ -13,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author 郭瑞景
- * @date 2020-03-02
+ * Author: 郭瑞景
+ * Date: 2020-03-02
  */
 
 @Service

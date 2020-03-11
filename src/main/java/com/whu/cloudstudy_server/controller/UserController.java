@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
-import com.whu.cloudstudy_server.Response;
+import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.User;
 import com.whu.cloudstudy_server.service.UserAndPlanetService;
@@ -12,8 +12,8 @@ import java.util.List;
 
 
 /**
- * @author 叶瑞雯
- * @date 2020-02-25
+ * Author: 叶瑞雯
+ * Date: 2020-02-25
  */
 
 @RestController
