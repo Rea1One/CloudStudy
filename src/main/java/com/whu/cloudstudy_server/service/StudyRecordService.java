@@ -39,8 +39,8 @@ public class StudyRecordService {
      */
     @Transactional
     public int startBroadcast(Integer userId, Integer planetId) {
-        StudyRecord startRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 3);  // 最近一条开始直播的记录
-        StudyRecord stopRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 4);  // 最近一条结束直播的记录
+        StudyRecord startRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 2);  // 最近一条开始直播的记录
+        StudyRecord stopRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 3);  // 最近一条结束直播的记录
         if (startRecord != null && stopRecord == null) {
             return -1;  // 已开始直播
         }
@@ -52,7 +52,7 @@ public class StudyRecordService {
             }
         }
         StudyRecord record = new StudyRecord();
-        record.setOperation(3);
+        record.setOperation(2);
         record.setPlanetId(planetId);
         record.setUsreId(userId);
         int cnt =  studyRecordMapper.insertStudyRecord(record);
@@ -74,8 +74,8 @@ public class StudyRecordService {
     public boolean isOnBroadcast(Integer planetId){
         Planet p=planetService.findPlanetById(planetId);
         int creatorId=p.getCreatorId();
-        StudyRecord startRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(creatorId, 3);  // 最近一条开始直播的记录
-        StudyRecord stopRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(creatorId, 4);  // 最近一条结束直播的记录
+        StudyRecord startRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(creatorId, 2);  // 最近一条开始直播的记录
+        StudyRecord stopRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(creatorId, 3);  // 最近一条结束直播的记录
         if (startRecord != null && stopRecord == null) {
             return true;  // 正在直播
         }
