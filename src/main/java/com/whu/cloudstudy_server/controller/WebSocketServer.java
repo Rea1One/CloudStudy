@@ -48,7 +48,7 @@ public class WebSocketServer {
 
     @Autowired
     public void setService(StudyRecordServiceGuo recordService) {
-        this.recordService = recordService;
+        WebSocketServer.recordService = recordService;
     }
 
     @OnOpen
@@ -57,9 +57,9 @@ public class WebSocketServer {
         this.userId = userId;
         this.planetId = planetId;
         prevTime = System.currentTimeMillis();
-        // userId 是用来表示唯一客户端，如果需要指定发送，需要指定发送通过 userId 来区分
+        // userId 用来表示唯一客户端，如果需要指定发送，需要指定发送通过 userId 来区分
         clients.put(userId, this);
-        log.info("User " + userId + " connect successfully, online count: " + clients.size());
+        log.info("User: " + userId + ", connect successfully, online count: " + clients.size());
         timer = new Timer(true);
         TimerTask task = new TimerTask() {
             @Override
@@ -73,7 +73,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose() {
         clients.remove(userId);
-        log.info("User " + userId + " disconnect successfully, online count: " + clients.size());
+        log.info("User: " + userId + ", disconnect successfully, online count: " + clients.size());
         stopStudyBySocket(userId, planetId);
         timer.cancel();
         System.gc();
@@ -101,19 +101,16 @@ public class WebSocketServer {
                 log.info("User: " + userId + ", stop study successfully");
                 break;
             case -1:
-                log.info("User: " + userId + ", does not exist");
+                log.info("User: " + userId + ", was not studying");
                 break;
             case -2:
-                log.info("User: " + userId + ", does not have previous start study record");
+                log.info("User: " + userId + ", StudyRecord insertion failed");
                 break;
             case -3:
-                log.info("User: " + userId + ", record insertion failed");
+                log.info("User: " + userId + ", does not exist");
                 break;
             case -4:
                 log.info("User: " + userId + ", update study time failed");
-                break;
-            case -5:
-                log.info("User: " + userId + ", is not studying");
                 break;
             default:
                 break;

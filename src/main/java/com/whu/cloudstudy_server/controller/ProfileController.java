@@ -22,23 +22,6 @@ public class ProfileController {
     public Response changeProfile(Integer id, MultipartFile data) {
         Response response;
         String ret = profileService.changeProfile(id, data);
-//        switch (ret) {
-//            case 0:
-//                response = new Response(0, "成功", null);
-//                break;
-//            case -1:
-//                response = new Response(-1, "用户不存在", null);
-//                break;
-//            case -2:
-//                response = new Response(-2, "更新用户头像失败", null);
-//                break;
-//            case -3:
-//                response = new Response(-3, "图像上传失败", null);
-//                break;
-//            default:
-//                response = new Response(-4, "失败", null);
-//                break;
-//        }
         if (ret != null) {
             response = new Response(0, "成功", ret);
         } else {

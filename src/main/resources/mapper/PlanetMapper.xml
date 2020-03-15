@@ -17,7 +17,7 @@
     </select>
 
     <select id="findPlanetByGalaxy" resultType="com.whu.cloudstudy_server.entity.Planet">
-        select * from Planet where galaxy = #{galaxy} limit #{batchNum},10
+        select * from Planet where galaxy = #{galaxy} limit #{batchNum}, 10
     </select>
 
     <insert id="insertPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.Planet">

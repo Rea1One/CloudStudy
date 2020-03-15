@@ -9,6 +9,10 @@
         values (#{userId}, #{planetId}, #{operation})
     </insert>
 
+    <delete id="deleteStudyRecordById" parameterType="java.lang.Integer">
+        delete from StudyRecord where id = #{id}
+    </delete>
+
     <select id="findLatestStudyRecordByUserIdAndPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
         select * from StudyRecord where userId = #{userId} and planetId = #{planetId} order by time desc limit 1
     </select>
@@ -18,7 +22,7 @@
     </select>
 
     <select id="findStudyRecordByPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
-        select * from StudyRecord where planetId = #{planetId} order by time desc,id asc limit #{batchNum},10
+        select * from StudyRecord where planetId = #{planetId} order by time desc,id asc limit #{batchNum}, 15
     </select>
 
     <select id="findAllByUserIdAndTimeBetween" resultType="com.whu.cloudstudy_server.entity.StudyRecord">

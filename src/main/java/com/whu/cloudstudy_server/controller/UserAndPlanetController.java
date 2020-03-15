@@ -91,7 +91,7 @@ public class UserAndPlanetController {
     public Response getPlanetFeed(Integer id, Integer batchNum) {
         Response response;
         List<List<Object>> result = new ArrayList<>();
-        List<StudyRecord> studyRecords = studyRecordService.findStudyRecordByPlanetId(id, batchNum * 10);
+        List<StudyRecord> studyRecords = studyRecordService.findStudyRecordByPlanetId(id, batchNum * 15);
         if (studyRecords == null) {
             response = new Response(-2, "失败", null);
             return response;

@@ -49,7 +49,7 @@ public class StudyRecordServiceGuo {
         record.setOperation(0);
         record.setPlanetId(planetId);
         record.setUsreId(userId);
-        int cnt =  recordMapper.insertStudyRecord(record);
+        int cnt = recordMapper.insertStudyRecord(record);
         if (cnt > 0) {
             return 0;
         } else {
@@ -66,45 +66,48 @@ public class StudyRecordServiceGuo {
      */
     @Transactional
     public int stopStudy(Integer userId, Integer planetId) {
-        StudyRecord startRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
+        StudyRecord startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
         StudyRecord stopRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
-        if (startRecord1 == null && stopRecord1 == null) {
-            return -5;  // 未开始自习
+        if (startRecord == null) {
+            return -1;  // 未开始自习
         }
-        if (startRecord1 != null && stopRecord1 != null) {
-            long startTime = startRecord1.getTime().getTime();
+        long startTime = startRecord.getTime().getTime();
+        if (stopRecord1 != null) {  // startRecord != null && stopRecord1 != null
             long stopTime = stopRecord1.getTime().getTime();
             if (startTime < stopTime) {
-                return -5;  // 未开始自习
+                return -1;  // 未开始自习
             }
         }
-        StudyRecord stopRecord = new StudyRecord();
-        stopRecord.setOperation(1);
-        stopRecord.setPlanetId(planetId);
-        stopRecord.setUsreId(userId);
-        stopRecord.setTime(new Timestamp(System.currentTimeMillis() + 8 * 60 * 60000));  // Bug here. Time will be null without this statement.
-        int cntRecord = recordMapper.insertStudyRecord(stopRecord);
-        if (cntRecord <= 0) {
-            return -3;  // 插入学习记录数据失败
-        }
-        // 更改用户表学习时长
-        User user = userMapper.findUserById(userId);
-        if (user == null) {
-            return -1;  // 用户不存在
-        }
-        StudyRecord startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);
-        if (startRecord == null) {
-            return -2;  // 用户没有开始学习的记录
-        }
-        long mSec = stopRecord.getTime().getTime() - startRecord.getTime().getTime();
-        Integer studyTime = Math.toIntExact(mSec) / 60000;
-        Integer prevStudyTime = user.getStudyTime();
-        user.setStudyTime(prevStudyTime + studyTime);
-        int cntUser = userMapper.updateUserInfo(user);
-        if (cntUser > 0) {  // 成功
+        // 判断自习时长是否超过 1 min
+        long currTime = System.currentTimeMillis() + 8 * 60 * 60000;
+        long mSec = currTime - startTime;
+        Integer studyTime = Math.toIntExact(mSec) / 60000;  // 自习时长 (min)
+        if (studyTime < 1) {
+            recordMapper.deleteStudyRecordById(startRecord.getId());
             return 0;
         } else {
-            return -4;  // 更新用户学习时间失败
+            StudyRecord stopRecord = new StudyRecord();
+            stopRecord.setOperation(1);
+            stopRecord.setPlanetId(planetId);
+            stopRecord.setUsreId(userId);
+            stopRecord.setTime(new Timestamp(currTime));  // Bug here. Time will be null without this statement.
+            int cntRecord = recordMapper.insertStudyRecord(stopRecord);
+            if (cntRecord <= 0) {
+                return -2;  // 插入学习记录数据失败
+            }
+            // 更改用户表学习时长
+            User user = userMapper.findUserById(userId);
+            if (user == null) {
+                return -3;  // 用户不存在
+            }
+            Integer prevStudyTime = user.getStudyTime();
+            user.setStudyTime(prevStudyTime + studyTime);
+            int cntUser = userMapper.updateUserInfo(user);
+            if (cntUser > 0) {  // 成功
+                return 0;
+            } else {
+                return -4;  // 更新用户学习时间失败
+            }
         }
     }
 }
