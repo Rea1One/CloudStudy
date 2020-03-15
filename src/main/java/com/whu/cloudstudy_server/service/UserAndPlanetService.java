@@ -24,6 +24,12 @@ public class UserAndPlanetService {
 
     @Transactional
     public int insertUserAndPlanet(UserAndPlanet userAndPlanet){
+        int userId=userAndPlanet.getUserId();
+        int planetId=userAndPlanet.getPlanetId();
+        List<Planet> planets=userAndPlanetMapper.findPlanetByUserId(userId);
+        for(Planet p:planets){
+            if(p.getId()==planetId) return -1;
+        }
         return userAndPlanetMapper.insertUserAndPlanet(userAndPlanet);
     }
 

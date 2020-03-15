@@ -66,15 +66,19 @@ public class UserAndPlanetController {
         userAndPlanet.setUserId(userId);
         userAndPlanet.setPlanetId(planetId);
         int cnt1 = userAndPlanetService.insertUserAndPlanet(userAndPlanet);
+        if(cnt1 == -1){
+            response = new Response(-4, "已经加入过该星球", null);
+            return response;
+        }
         if (cnt1 <= 0) {
-            response = new Response(-4, "插入用户-星球关系数据失败", null);
+            response = new Response(-5, "插入用户-星球关系数据失败", null);
             return response;
         }
         int n = planet.getPopulation() + 1;
         planet.setPopulation(n);
         int cnt2 = planetService.updatePlanetInfo(planet);
         if (cnt2 <= 0) {
-            response = new Response(-5, "更新星球信息失败", null);
+            response = new Response(-6, "更新星球信息失败", null);
             return response;
         }
         response = new Response(0, "加入成功", null);

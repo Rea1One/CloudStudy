@@ -1,6 +1,10 @@
 package com.whu.cloudstudy_server.controller;
 
+import com.whu.cloudstudy_server.entity.Planet;
+import com.whu.cloudstudy_server.entity.UserAndPlanet;
+import com.whu.cloudstudy_server.service.PlanetService;
 import com.whu.cloudstudy_server.util.Response;
+import com.whu.cloudstudy_server.service.StudyRecordService;
 import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +65,58 @@ public class StudyRecordController {
                 break;
             default:
                 response = new Response(-5, "失败", null);
+                break;
+        }
+        return response;
+    }
+
+    @Autowired
+    StudyRecordService studyRecordService;
+
+    @PostMapping(value = "/broadcast")
+    public Response startBroadcast(Integer userId, Integer planetId) {
+        Response response;
+        int ret = studyRecordService.startBroadcast(userId, planetId);
+        switch (ret) {
+            case 0:
+                response = new Response(0, "成功", null);
+                break;
+            case -1:
+                response = new Response(-1, "正在直播", null);
+                break;
+            case -2:
+                response = new Response(-2, "插入学习记录失败", null);
+                break;
+            default:
+                response = new Response(-3, "失败", null);
+                break;
+        }
+        return response;
+    }
+
+    @Autowired
+    PlanetService planetService;
+
+    @PostMapping(value = "/watchBroadcast")
+    public Response watchBroadcast(Integer userId, Integer planetId) {
+        Response response;
+        if(!studyRecordService.isOnBroadcast(planetId)){
+            response = new Response(-4, "主播未上线", null);
+            return response;
+        }
+        int ret = recordService.startStudy(userId, planetId);
+        switch (ret) {
+            case 0:
+                response = new Response(0, "成功", null);
+                break;
+            case -1:
+                response = new Response(-1, "正在学习", null);
+                break;
+            case -2:
+                response = new Response(-2, "插入学习记录失败", null);
+                break;
+            default:
+                response = new Response(-3, "失败", null);
                 break;
         }
         return response;
