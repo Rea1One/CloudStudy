@@ -73,7 +73,7 @@ public class StudyRecordController {
     @Autowired
     StudyRecordService studyRecordService;
 
-    @PostMapping(value = "/broadcast")
+    @PostMapping(value = "/startBroadcast")
     public Response startBroadcast(Integer userId, Integer planetId) {
         Response response;
         int ret = studyRecordService.startBroadcast(userId, planetId);
