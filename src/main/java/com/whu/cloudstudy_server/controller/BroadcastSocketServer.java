@@ -1,12 +1,10 @@
 package com.whu.cloudstudy_server.controller;
 
-
 import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -17,20 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Author: 郭瑞景
- * Date: 2020-03-09
+ * Date: 2020-03-16
  */
 
-/**
- * @ServerEndpoint 这个注解的作用：
- * 这个注解用于标识作用在类上，它的主要功能是把当前类标识成一个 WebSocket 的服务端
- * 注解的值为客户端连接访问的 url
- */
-@ServerEndpoint("/websocket/{userId}/{planetId}")
+@ServerEndpoint("/broadcastServer/{userId}/{planetId}/{userName}/{profileUrl}/{type}")
 @Component
-public class WebSocketServer {
-    // 与某个客户端的连接对话，需要通过它来给客户端发送消息
+public class BroadcastSocketServer {
+
     private Session session;
-    // 标识当前连接客户端的用户
+
     private Integer userId;
 
     private Integer planetId;
@@ -38,27 +31,34 @@ public class WebSocketServer {
     private Timer timer;
 
     private long prevTime;
-    // 存放所有连接服务的客户端
-    private static Map<Integer, WebSocketServer> clients = new ConcurrentHashMap<>();
 
-    private static Log log = LogFactory.getLog(WebSocketServer.class);
+    // 存放所有连接服务的客户端，根据星球 id 将用户分组
+    private static Map<Integer, List<BroadcastSocketServer>> users = new ConcurrentHashMap<>();
+
+    private static Log log = LogFactory.getLog(BroadcastSocketServer.class);
 
     private static StudyRecordServiceGuo recordService;
 
     @Autowired
     public void setService(StudyRecordServiceGuo recordService) {
-        WebSocketServer.recordService = recordService;
+        BroadcastSocketServer.recordService = recordService;
     }
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") Integer userId, @PathParam("planetId") Integer planetId) {
+    public void onOpen(Session session, @PathParam("userId") Integer userId, @PathParam("planetId") Integer planetId,
+                       @PathParam("userName") String userName, @PathParam("profileUrl") String profileUrl, @PathParam("type") int type) {
         this.session = session;
         this.userId = userId;
         this.planetId = planetId;
         prevTime = System.currentTimeMillis();
-        // userId 用来表示唯一客户端，如果需要指定发送，需要指定发送通过 userId 来区分
-        clients.put(userId, this);
-        log.info("User: " + userId + ", connect successfully, online count: " + clients.size());
+        if (users.containsKey(planetId)) {  // 该星球已存在
+            users.get(planetId).add(this);  // 存入该用户连接
+        } else {  // 该星球未存在
+            List<BroadcastSocketServer> userList = new LinkedList<>();
+            userList.add(this);
+            users.put(planetId, userList);
+        }
+        log.info("User: " + userId + ", connect successfully");
         timer = new Timer(true);
         TimerTask task = new TimerTask() {
             @Override
@@ -67,12 +67,23 @@ public class WebSocketServer {
             }
         };
         timer.scheduleAtFixedRate(task, new Date(), 1000);
+
+        // 0：不是主播  1：是主播
+        // 通知其他用户 “我”(非主播) 加入了直播间
+        if (type == 0) {
+            JSONObject jo = new JSONObject();
+            jo.put("id", planetId);
+            jo.put("username", userName);
+            jo.put("userid", userId);
+            jo.put("headshot", profileUrl);
+            sendMessage(planetId, jo.toString());
+        }
     }
 
     @OnClose
     public void onClose() {
-        clients.remove(userId);
-        log.info("User: " + userId + ", disconnect successfully, online count: " + clients.size());
+        users.get(planetId).remove(this);
+        log.info("User: " + userId + ", disconnect successfully");
         stopStudyBySocket(userId, planetId);
         timer.cancel();
         System.gc();
@@ -84,14 +95,24 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(byte[] message) {
-        log.info("Received message: " + new String(message));
-        prevTime = System.currentTimeMillis();
+    public void onMessage(String jsonMsg) {
+        JSONObject jo = new JSONObject(jsonMsg);
+        Integer planetId = jo.getInt("id");
+        if (planetId.equals(0)) {  // id 为 0 时用于监测用户是否在线
+            prevTime = System.currentTimeMillis();
+            log.info("Heartbeat received");
+        } else {
+            sendMessage(planetId, jo.toString());
+            log.info("Group message sent");
+        }
     }
 
-//    private void sendMessage(Integer userId, String message) {
-//        clients.get(userId).session.getAsyncRemote().sendText(message);
-//    }
+    private void sendMessage(Integer planetId, String jsonMsg) {
+        List<BroadcastSocketServer> userList = users.get(planetId);
+        for (BroadcastSocketServer user : userList) {
+            user.session.getAsyncRemote().sendText(jsonMsg);
+        }
+    }
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
         int ret = recordService.stopStudy(userId, planetId);
