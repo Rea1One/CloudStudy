@@ -1,0 +1,34 @@
+package com.whu.cloudstudy_server.controller;
+
+import com.whu.cloudstudy_server.service.StatisticService;
+import com.whu.cloudstudy_server.util.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+/**
+ * Author: 叶瑞雯
+ * Date: 2020-03-16
+ */
+
+@RestController
+@RequestMapping(value = "/other")
+public class StatisticController {
+    @Autowired
+    StatisticService statisticService;
+
+    @PostMapping(value = "/queryStatistics1")
+    public Response queryDailyStudyTime(Integer id, Integer batchNum,Integer month){
+        Response response;
+        List<Long> studyTime=statisticService.getStudyTimePerDay(id,batchNum,month);
+        if(studyTime==null){
+            response=new Response(-1,"失败", null);
+            return response;
+        }
+        response=new Response(0, "成功", studyTime);
+        return response;
+    }
+}
