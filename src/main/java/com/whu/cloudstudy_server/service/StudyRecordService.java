@@ -2,9 +2,7 @@ package com.whu.cloudstudy_server.service;
 
 import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.StudyRecord;
-import com.whu.cloudstudy_server.entity.User;
 import com.whu.cloudstudy_server.mapper.StudyRecordMapper;
-import com.whu.cloudstudy_server.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
