@@ -21,8 +21,6 @@ import java.util.List;
 public class StudyRecordService {
     @Autowired(required = false)
     private StudyRecordMapper studyRecordMapper;
-    @Autowired(required = false)
-    private UserMapper userMapper;
 
     public List<StudyRecord> findStudyRecordByPlanetId(Integer planetId, Integer batchNum){
         return studyRecordMapper.findStudyRecordByPlanetId(planetId,batchNum);
@@ -87,5 +85,9 @@ public class StudyRecordService {
             }
         }
         return false;
+    }
+
+    public List<StudyRecord> findAllByUserIdAndTimeBetween(Integer userId, Timestamp startTime, Timestamp stopTime,Integer batchNum){
+        return studyRecordMapper.findAllByUserIdAndTimeBetween(userId,startTime,stopTime);
     }
 }

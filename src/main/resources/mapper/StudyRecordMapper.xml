@@ -26,6 +26,6 @@
     </select>
 
     <select id="findAllByUserIdAndTimeBetween" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
-        select * from StudyRecord where userId = #{userId} and time between #{startTime} and #{stopTime}
+        select * from StudyRecord where userId = #{userId} and time between #{startTime} and #{stopTime} order by time asc
     </select>
 </mapper>
