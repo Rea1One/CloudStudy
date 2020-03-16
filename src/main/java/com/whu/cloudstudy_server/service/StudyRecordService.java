@@ -84,8 +84,4 @@ public class StudyRecordService {
         }
         return false;
     }
-
-    public List<StudyRecord> findAllByUserIdAndTimeBetween(Integer userId, Timestamp startTime, Timestamp stopTime,Integer batchNum){
-        return studyRecordMapper.findAllByUserIdAndTimeBetween(userId,startTime,stopTime);
-    }
 }
