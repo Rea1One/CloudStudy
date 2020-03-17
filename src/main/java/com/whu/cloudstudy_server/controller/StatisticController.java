@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: 叶瑞雯
@@ -24,6 +25,18 @@ public class StatisticController {
     public Response queryDailyStudyTime(Integer id, Integer batchNum,Integer month){
         Response response;
         List<Long> studyTime=statisticService.getStudyTimePerDay(id,batchNum,month);
+        if(studyTime==null){
+            response=new Response(-1,"失败", null);
+            return response;
+        }
+        response=new Response(0, "成功", studyTime);
+        return response;
+    }
+
+    @PostMapping(value = "/queryStatistics2")
+    public Response queryStudyTimeInGalaxy(Integer id, Integer category){
+        Response response;
+        Map studyTime=statisticService.getStudyTimeInGalaxy(id,category);
         if(studyTime==null){
             response=new Response(-1,"失败", null);
             return response;

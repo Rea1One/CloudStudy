@@ -16,4 +16,5 @@ public interface StudyRecordMapper {
     StudyRecord findLatestStudyRecordByUserIdAndOperation(Integer userId, Integer operation);
     List<StudyRecord> findStudyRecordByPlanetId(Integer planetId, Integer batchNum);   //查询某个星球中的用户动态
     List<StudyRecord> findAllByUserIdAndTimeBetween(Integer userId, Timestamp startTime, Timestamp stopTime);
+    List<StudyRecord> findAllByUserIdAndGalaxyAndTimeBetween(Integer userId,Integer galaxy,Timestamp startTime,Timestamp stopTime);
 }

@@ -28,4 +28,10 @@
     <select id="findAllByUserIdAndTimeBetween" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
         select * from StudyRecord where userId = #{userId} and time between #{startTime} and #{stopTime} order by time asc
     </select>
+
+    <select id="findAllByUserIdAndGalaxyAndTimeBetween" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
+        select s.*
+        from StudyRecord s,Planet p
+        where s.userId = #{userId} and s.planetId = p.id and p.galaxy = #{galaxy} and s.time between #{startTime} and #{stopTime} order by s.time asc
+    </select>
 </mapper>
