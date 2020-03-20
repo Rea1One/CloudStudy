@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whu.cloudstudy_server.mapper.MessageMapper">
+
+    <select id="findMessageByReceiverId" resultType="com.whu.cloudstudy_server.entity.Message">
+        select * from Message where receiverId = #{receiverId}
+    </select>
+
+    <insert id="insertMessage" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.Message">
+        insert into Message (senderId,receiverId,content)
+        values (#{senderId}, #{receiverId}, #{content})
+    </insert>
+
+    <delete id="deleteMessage" parameterType="java.lang.Integer">
+        delete from Message where receiverId = #{receiverId}
+    </delete>
+</mapper>
