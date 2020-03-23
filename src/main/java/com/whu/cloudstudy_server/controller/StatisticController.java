@@ -22,9 +22,9 @@ public class StatisticController {
     StatisticService statisticService;
 
     @PostMapping(value = "/queryStatistics1")
-    public Response queryDailyStudyTime(Integer id, Integer batchNum,Integer month){
+    public Response queryDailyStudyTime(Integer id, Integer batchNum){
         Response response;
-        List<Long> studyTime=statisticService.getStudyTimePerDay(id,batchNum,month);
+        List<Long> studyTime=statisticService.getStudyTimePerDay(id,batchNum);
         if(studyTime==null){
             response=new Response(-1,"失败", null);
             return response;

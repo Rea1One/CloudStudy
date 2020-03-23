@@ -20,23 +20,13 @@ public class StatisticService {
     StudyRecordMapper studyRecordMapper;
 
     @Transactional
-    public List<Long> getStudyTimePerDay(Integer id,Integer batchNum,Integer month){
+    public List<Long> getStudyTimePerDay(Integer id,Integer batchNum){
         Calendar calendar=Calendar.getInstance();
         calendar.clear(); //清除缓存
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MONTH,month-1);
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH)-batchNum*7);//获取查询的最后一天
-        int dayNum=0;
-        if(batchNum<4){
-            dayNum=7;
-            calendar.add(Calendar.DAY_OF_MONTH,-6);//获取查询的第一天
-        }
-        else if(batchNum==4){
-            dayNum=calendar.getActualMaximum(Calendar.DAY_OF_MONTH)-28;
-            calendar.set(Calendar.DAY_OF_MONTH,0);//获取查询的第一天
-        }
+        calendar.add(Calendar.DAY_OF_MONTH, -batchNum*7-6);//获取查询的第一天
         List<Long> studyTime=new ArrayList<Long>();
-        for(int i=0;i<dayNum;i++){
+        for(int i=0;i<7;i++){
             Timestamp startTime=new Timestamp(getDailyStartTime(calendar.getTimeInMillis()));
             Timestamp endTime=new Timestamp(getDailyEndTime(calendar.getTimeInMillis()));
             List<StudyRecord> records=studyRecordMapper.findAllByUserIdAndTimeBetween(id,startTime,endTime);
