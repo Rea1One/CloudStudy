@@ -38,7 +38,7 @@ public class StudyRecordServiceGuo {
         if (startRecord != null && stopRecord == null) {
             return -1;  // 已开始自习
         }
-        if (startRecord != null && stopRecord != null) {
+        if (startRecord != null) {  // startRecord != null && stopRecord != null
             long startTime = startRecord.getTime().getTime();
             long stopTime = stopRecord.getTime().getTime();
             if (startTime > stopTime) {
@@ -62,12 +62,19 @@ public class StudyRecordServiceGuo {
      *
      * @param userId
      * @param planetId
+     * @param operation 1: 正常用户停止自习  3: 主播停止直播
      * @return 错误/成功代码
      */
     @Transactional
-    public int stopStudy(Integer userId, Integer planetId) {
-        StudyRecord startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
-        StudyRecord stopRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
+    public int stopStudy(Integer userId, Integer planetId, Integer operation) {
+        StudyRecord startRecord = null, stopRecord1 = null;
+        if (operation.equals(1)) {
+            startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
+            stopRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
+        } else if (operation.equals(3)) {
+            startRecord = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 2);  // 最近一条开始直播的记录
+            stopRecord1 = recordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 3);  // 最近一条结束直播的记录
+        }
         if (startRecord == null) {
             return -1;  // 未开始自习
         }
@@ -83,11 +90,15 @@ public class StudyRecordServiceGuo {
         long mSec = currTime - startTime;
         Integer studyTime = Math.toIntExact(mSec) / 60000;  // 自习时长 (min)
         if (studyTime < 1) {
-            recordMapper.deleteStudyRecordById(startRecord.getId());
-            return 0;
+            int cnt = recordMapper.deleteStudyRecordById(startRecord.getId());
+            if (cnt > 0) {
+                return 0;
+            } else {
+                return -5;  // 删除学习记录失败
+            }
         } else {
             StudyRecord stopRecord = new StudyRecord();
-            stopRecord.setOperation(1);
+            stopRecord.setOperation(operation);
             stopRecord.setPlanetId(planetId);
             stopRecord.setUsreId(userId);
             stopRecord.setTime(new Timestamp(currTime));  // Bug here. Time will be null without this statement.

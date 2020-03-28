@@ -76,7 +76,7 @@ public class PlanetServiceGuo {
                 cUsers.add(cUser);
             } else {
                 Integer status = record.getOperation();
-                if (status.equals(0)) {  // 自习中
+                if (status.equals(0) || status.equals(2)) {  // 自习中
                     long currTime = System.currentTimeMillis() + 8 * 60 * 60000;
                     long mSec = currTime - record.getTime().getTime();
                     int minutes = Math.toIntExact(mSec) / 60000;
@@ -94,7 +94,7 @@ public class PlanetServiceGuo {
                             user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), statusInfo);
                     processInfo(cUser);
                     cUsers.add(cUser);
-                } else if (status.equals(1)) {  // 休息中
+                } else if (status.equals(1) || status.equals(3)) {  // 休息中
                     CustomizedUser cUser = new CustomizedUser(user.getId(), user.getName(), null,
                             user.getSex(), user.getAge(), user.getSignature(), user.getEmail(),
                             user.getPhoto(), user.getStudyTime(), user.getRegisterTime(), "休息中");

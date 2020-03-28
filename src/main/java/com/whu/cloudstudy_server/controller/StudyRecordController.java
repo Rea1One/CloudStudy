@@ -46,7 +46,7 @@ public class StudyRecordController {
     @PostMapping(value = "/stop")
     public Response stopStudy(Integer userId, Integer planetId) {
         Response response;
-        int ret = recordService.stopStudy(userId, planetId);
+        int ret = recordService.stopStudy(userId, planetId, 1);
         switch (ret) {
             case 0:
                 response = new Response(0, "成功", null);

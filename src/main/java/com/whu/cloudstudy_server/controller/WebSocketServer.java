@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -85,7 +86,7 @@ public class WebSocketServer {
 
     @OnMessage
     public void onMessage(byte[] message) {
-        log.info("Received message: " + new String(message));
+        log.info("Received message: " + new String(message, StandardCharsets.UTF_8));
         prevTime = System.currentTimeMillis();
     }
 
@@ -94,7 +95,7 @@ public class WebSocketServer {
 //    }
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
-        int ret = recordService.stopStudy(userId, planetId);
+        int ret = recordService.stopStudy(userId, planetId, 1);
         switch (ret) {
             case 0:
                 log.info("User: " + userId + ", stop study successfully");
@@ -110,6 +111,9 @@ public class WebSocketServer {
                 break;
             case -4:
                 log.info("User: " + userId + ", update study time failed");
+                break;
+            case -5:
+                log.info("User: " + userId + ", StudyRecord deletion failed");
                 break;
             default:
                 break;

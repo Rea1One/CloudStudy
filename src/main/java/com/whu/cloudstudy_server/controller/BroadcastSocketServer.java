@@ -1,6 +1,8 @@
 package com.whu.cloudstudy_server.controller;
 
 import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
+import com.whu.cloudstudy_server.util.Response;
+import com.whu.cloudstudy_server.util.ServerEncoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 2020-03-16
  */
 
-@ServerEndpoint("/broadcastServer/{userId}/{planetId}/{userName}/{profileUrl}/{type}")
+@ServerEndpoint(value = "/broadcastServer/{userId}/{planetId}/{userName}/{profileUrl}/{type}")
 @Component
 public class BroadcastSocketServer {
 
@@ -29,6 +33,8 @@ public class BroadcastSocketServer {
     private Integer planetId;
 
     private Timer timer;
+
+    private Integer type;  // 1是主播  0不是主播
 
     private long prevTime;
 
@@ -50,6 +56,8 @@ public class BroadcastSocketServer {
         this.session = session;
         this.userId = userId;
         this.planetId = planetId;
+        this.type = type;
+        String headshot = "http://106.13.41.151:8088/image/" + profileUrl;
         prevTime = System.currentTimeMillis();
         if (users.containsKey(planetId)) {  // 该星球已存在
             users.get(planetId).add(this);  // 存入该用户连接
@@ -72,10 +80,10 @@ public class BroadcastSocketServer {
         // 通知其他用户 “我”(非主播) 加入了直播间
         if (type == 0) {
             JSONObject jo = new JSONObject();
-            jo.put("id", planetId);
+            jo.put("id", 1);
             jo.put("username", userName);
             jo.put("userid", userId);
-            jo.put("headshot", profileUrl);
+            jo.put("headshot", headshot);
             sendMessage(planetId, jo.toString());
         }
     }
@@ -83,10 +91,13 @@ public class BroadcastSocketServer {
     @OnClose
     public void onClose() {
         users.get(planetId).remove(this);
+        if (users.get(planetId).size() == 0) {
+            users.remove(planetId);
+        }
         log.info("User: " + userId + ", disconnect successfully");
         stopStudyBySocket(userId, planetId);
         timer.cancel();
-        System.gc();
+        //System.gc();
     }
 
     @OnError
@@ -95,27 +106,62 @@ public class BroadcastSocketServer {
     }
 
     @OnMessage
+    public void onMessage(byte[] message) {
+        String jsonMsg = new String(message, StandardCharsets.UTF_8);
+        myOnMessage(jsonMsg);
+    }
+
+    @OnMessage
     public void onMessage(String jsonMsg) {
+        myOnMessage(jsonMsg);
+    }
+
+    private void myOnMessage(String jsonMsg) {
+        log.info("Received message: " + jsonMsg);
         JSONObject jo = new JSONObject(jsonMsg);
-        Integer planetId = jo.getInt("id");
-        if (planetId.equals(0)) {  // id 为 0 时用于监测用户是否在线
+        Integer id = jo.getInt("id");
+        if (id.equals(0)) {  // id 为 0 时用于监测用户是否在线
             prevTime = System.currentTimeMillis();
-            log.info("Heartbeat received");
+            log.info("User " + userId + ": Heartbeat received");
+        } else if (id.equals(-1)) {  // 主播下线
+            JSONObject jo2 = new JSONObject();
+            jo2.put("id", 3);
+            sendMessage(planetId, jo2.toString());
+            log.info(jo2.toString());
         } else {
+            String headshot = "http://106.13.41.151:8088/image/" + jo.getString("headshot");
+            jo.put("headshot", headshot);
             sendMessage(planetId, jo.toString());
             log.info("Group message sent");
         }
     }
 
-    private void sendMessage(Integer planetId, String jsonMsg) {
+    private void sendMessage(Integer planetId, String message) {
+        log.info("Sent message:" + message);
+        ByteBuffer bBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
         List<BroadcastSocketServer> userList = users.get(planetId);
         for (BroadcastSocketServer user : userList) {
-            user.session.getAsyncRemote().sendText(jsonMsg);
+            if (user.equals(this)) continue;  // 不给自己发
+            user.session.getAsyncRemote().sendBinary(bBuffer);
         }
     }
 
+//    private void sendMessage(Integer planetId, Object message) {
+//        List<BroadcastSocketServer> userList = users.get(planetId);
+//        for (BroadcastSocketServer user : userList) {
+//            if (user.equals(this)) continue;  // 不给自己发
+//            user.session.getAsyncRemote().sendObject(message);  // 异步发送消息
+//        }
+//    }
+
     private void stopStudyBySocket(Integer userId, Integer planetId) {
-        int ret = recordService.stopStudy(userId, planetId);
+        Integer operation;
+        if (type == 1) {
+            operation = 3;
+        } else {
+            operation = 1;
+        }
+        int ret = recordService.stopStudy(userId, planetId, operation);
         switch (ret) {
             case 0:
                 log.info("User: " + userId + ", stop study successfully");
@@ -131,6 +177,9 @@ public class BroadcastSocketServer {
                 break;
             case -4:
                 log.info("User: " + userId + ", update study time failed");
+                break;
+            case -5:
+                log.info("User: " + userId + ", StudyRecord deletion failed");
                 break;
             default:
                 break;
