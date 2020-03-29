@@ -35,26 +35,9 @@ public class StatisticService {
                 calendar.add(Calendar.DAY_OF_MONTH,1);
                 continue;
             }
+            if(batchNum==0&&i==6&&(records.get(records.size()-1).getOperation()==0)) records.remove(records.size()-1);
             long dailyTotal=0;
-            int m=0,n=0;
-            boolean isFirst1 = (records.get(0).getOperation()==1);
-            boolean isLast0 = (records.get(records.size()-1).getOperation()==0);
-            if(isFirst1&&!isLast0){//若当天第一条记录即为结束学习,最后一条记录不为开始学习
-                m=1;
-                n=0;
-                dailyTotal+=(records.get(0).getTime().getTime()-startTime.getTime()) / (long)(1000*60);
-            }
-            if(!isFirst1&&isLast0){//若当天第一条记录不为结束学习，最后一条学习记录为开始学习
-                m=0;
-                n=1;
-                dailyTotal+=(endTime.getTime()-records.get(records.size()-1).getTime().getTime()) / (long)(1000*60);
-            }
-            if(isFirst1&&isLast0){//若当天第一条记录为结束学习，最后一条学习记录为开始学习
-                m=1;
-                n=1;
-                dailyTotal+=(endTime.getTime()-records.get(records.size()-1).getTime().getTime()) / (long)(1000*60);
-            }
-            for(int j=m;j<records.size()-n;j+=2){
+            for(int j=0;j<records.size();j+=2){
                 long time=(records.get(j+1).getTime().getTime()-records.get(j).getTime().getTime()) / (long)(1000*60);
                 dailyTotal+=time;
             }
@@ -93,26 +76,9 @@ public class StatisticService {
                 studyTime.put(i,(long)0);
                 continue;
             }
+            if(records.get(records.size()-1).getOperation()==0) records.remove(records.size()-1);
             long total=0;
-            int m=0,n=0;
-            boolean isFirst1 = (records.get(0).getOperation()==1);
-            boolean isLast0 = (records.get(records.size()-1).getOperation()==0);
-            if(isFirst1&&!isLast0){//若第一条记录即为结束学习,最后一条记录不为开始学习
-                m=1;
-                n=0;
-                total+=(records.get(0).getTime().getTime()-startTime.getTime()) / (long)(1000*60);
-            }
-            if(!isFirst1&&isLast0){//若第一条记录不为结束学习，最后一条学习记录为开始学习
-                m=0;
-                n=1;
-                total+=(stopTime.getTime()-records.get(records.size()-1).getTime().getTime()) / (long)(1000*60);
-            }
-            if(isFirst1&&isLast0){//若第一条记录结束学习，最后一条学习记录为开始学习
-                m=1;
-                n=1;
-                total+=(stopTime.getTime()-records.get(records.size()-1).getTime().getTime()) / (long)(1000*60);
-            }
-            for(int j=m;j<records.size()-n;j+=2){
+            for(int j=0;j<records.size();j+=2){
                 long time=(records.get(j+1).getTime().getTime()-records.get(j).getTime().getTime()) / (long)(1000*60);
                 total+=time;
             }
