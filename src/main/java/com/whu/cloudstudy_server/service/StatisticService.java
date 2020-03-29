@@ -76,8 +76,8 @@ public class StatisticService {
                 stopTime=new Timestamp(getDailyEndTime(calendar.getTimeInMillis()));
                 break;
             case 1:
-                startTime=new Timestamp(getWeekStartTime());
-                stopTime=new Timestamp(getWeekEndTime());
+                startTime=new Timestamp(getWeekStartTime(calendar.getTimeInMillis()));
+                stopTime=new Timestamp(getWeekEndTime(calendar.getTimeInMillis()));
                 break;
             case 2:
                 startTime=new Timestamp(getMonthStartTime(calendar.getTimeInMillis()));
@@ -156,21 +156,29 @@ public class StatisticService {
     /**
      * 获取当周开始时间戳
      */
-    public static Long getWeekStartTime() {
+    public static Long getWeekStartTime(Long timeStamp) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONDAY), calendar.get(Calendar.DAY_OF_MONTH), 0, 0,0);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.setTimeInMillis(timeStamp);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
     }
 
     /**
      * 获取当周的结束时间戳
      */
-    public static Long getWeekEndTime() {
+    public static Long getWeekEndTime(Long timeStamp) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONDAY), calendar.get(Calendar.DAY_OF_MONTH), 0, 0,0);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return calendar.getTimeInMillis()+ (7 * 24 * 60 * 60 * 1000);
+        calendar.setTimeInMillis(timeStamp);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTimeInMillis();
     }
 
     /**
