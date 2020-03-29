@@ -77,7 +77,7 @@ public class PlanetServiceGuo {
             } else {
                 Integer status = record.getOperation();
                 if (status.equals(0) || status.equals(2)) {  // 自习中
-                    long currTime = System.currentTimeMillis() + 8 * 60 * 60000;
+                    long currTime = System.currentTimeMillis();
                     long mSec = currTime - record.getTime().getTime();
                     int minutes = Math.toIntExact(mSec) / 60000;
                     int h = minutes / 60;

@@ -86,7 +86,7 @@ public class StudyRecordServiceGuo {
             }
         }
         // 判断自习时长是否超过 1 min
-        long currTime = System.currentTimeMillis() + 8 * 60 * 60000;
+        long currTime = System.currentTimeMillis();
         long mSec = currTime - startTime;
         Integer studyTime = Math.toIntExact(mSec) / 60000;  // 自习时长 (min)
         if (studyTime < 1) {
