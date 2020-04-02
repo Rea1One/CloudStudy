@@ -22,6 +22,8 @@ import java.util.Random;
 public class PlanetServiceHu{
     @Autowired(required = false)
     private PlanetMapper planetMapper;
+
+    @Autowired(required = false)
     private UserAndPlanetMapper userAndPlanetMapper;
 
     /**
