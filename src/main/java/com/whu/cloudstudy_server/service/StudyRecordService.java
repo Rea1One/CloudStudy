@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class StudyRecordService {
         return studyRecordMapper.findStudyRecordByPlanetId(planetId,batchNum);
     }
 
-    /* 3开始, 4结束 */
+    /* 2开始, 3结束 */
 
     /**
      * 开始直播
@@ -35,16 +34,28 @@ public class StudyRecordService {
      */
     @Transactional
     public int startBroadcast(Integer userId, Integer planetId) {
-        StudyRecord startRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 2);  // 最近一条开始直播的记录
-        StudyRecord stopRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 3);  // 最近一条结束直播的记录
-        if (startRecord != null && stopRecord == null) {
-            return -1;  // 已开始直播
+        StudyRecord startStudyRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 0);  // 最近一条开始学习的记录
+        StudyRecord stopStudyRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 1);  // 最近一条结束学习的记录
+        if (startStudyRecord != null && stopStudyRecord == null) {
+            return -1;  // 已开始学习
         }
-        if (startRecord != null && stopRecord != null) {
-            long startTime = startRecord.getTime().getTime();
-            long stopTime = stopRecord.getTime().getTime();
+        if (startStudyRecord != null && stopStudyRecord != null) {
+            long startTime = startStudyRecord.getTime().getTime();
+            long stopTime = stopStudyRecord.getTime().getTime();
             if (startTime > stopTime) {
-                return -1;  // 已开始直播
+                return -1;  // 已开始学习
+            }
+        }
+        StudyRecord startBroadcastRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 2);  // 最近一条开始直播的记录
+        StudyRecord stopBroadcastRecord = studyRecordMapper.findLatestStudyRecordByUserIdAndOperation(userId, 3);  // 最近一条结束直播的记录
+        if (startBroadcastRecord != null && stopBroadcastRecord == null) {
+            return -2;  // 已开始直播
+        }
+        if (startBroadcastRecord != null && stopBroadcastRecord != null) {
+            long startTime = startBroadcastRecord.getTime().getTime();
+            long stopTime = stopBroadcastRecord.getTime().getTime();
+            if (startTime > stopTime) {
+                return -2;  // 已开始直播
             }
         }
         StudyRecord record = new StudyRecord();
@@ -55,7 +66,7 @@ public class StudyRecordService {
         if (cnt > 0) {
             return 0;
         } else {
-            return -2;  // 插入记录失败
+            return -3;  // 插入记录失败
         }
     }
 

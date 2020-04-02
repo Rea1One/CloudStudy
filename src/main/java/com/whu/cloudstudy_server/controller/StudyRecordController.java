@@ -82,9 +82,12 @@ public class StudyRecordController {
                 response = new Response(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1, "正在直播", null);
+                response = new Response(-1, "正在学习", null);
                 break;
             case -2:
+                response = new Response(-1, "正在直播", null);
+                break;
+            case -3:
                 response = new Response(-2, "插入学习记录失败", null);
                 break;
             default:
