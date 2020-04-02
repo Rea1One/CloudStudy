@@ -40,7 +40,7 @@ public class PlanetServiceHu{
 
     public int createPlanet(Integer creatorId,String name,String introduction,Integer galaxy,Integer category,@Nullable Integer password){
         Planet planet=new Planet();
-        String randcode = randomCode();
+        String randcode = returnCode();
         planet.setCode(randcode);
         planet.setCreatorId(creatorId);
         planet.setName(name);
@@ -98,6 +98,8 @@ public class PlanetServiceHu{
         }
     }
 
+
+    //生成code 8位随机数
     private static String randomCode() {
         int  maxNum = 10;
         int i;
@@ -113,5 +115,16 @@ public class PlanetServiceHu{
             }
         }
         return pwd.toString();
+    }
+
+    //检验code是否有重复
+    public String returnCode(){
+        String rancode=randomCode();
+        String rancode1 = planetMapper.selectByRancode(rancode);//生成的随机数进入数据库中查询一下，看时候有相同的。
+        if(rancode1 != null){//如果有相同的数据
+            return returnCode();//再次调用方法，生成一个随机数
+        }else{//否则
+            return rancode;//获得不重复的随机数据
+        }
     }
 }
