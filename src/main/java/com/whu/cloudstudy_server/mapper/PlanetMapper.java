@@ -16,4 +16,5 @@ public interface PlanetMapper {
     int insertPlanet(Planet planet);
     int updatePlanetInfo(Planet planet);
     int deletePlanet(Integer id);
+    String selectByRancode(String rancode);
 }
