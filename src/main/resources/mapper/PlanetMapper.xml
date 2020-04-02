@@ -19,6 +19,10 @@
     <select id="findPlanetByGalaxy" resultType="com.whu.cloudstudy_server.entity.Planet">
         select * from Planet where galaxy = #{galaxy} limit #{batchNum}, 10
     </select>
+        
+    <select id="selectByRancode" resultType="com.whu.cloudstudy_server.entity.Planet">
+        select code from Planet where code = #{rancode}
+    </select>
 
     <insert id="insertPlanet" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.Planet">
         insert into Planet (code, creatorId, name, category, galaxy, introduction, password)
