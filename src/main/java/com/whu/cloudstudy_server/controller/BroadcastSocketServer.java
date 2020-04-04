@@ -97,7 +97,7 @@ public class BroadcastSocketServer {
         log.info("User: " + userId + ", disconnect successfully");
         stopStudyBySocket(userId, planetId);
         timer.cancel();
-        //System.gc();
+//        System.gc();
     }
 
     @OnError
@@ -138,21 +138,15 @@ public class BroadcastSocketServer {
 
     private void sendMessage(Integer planetId, String message) {
         log.info("Sent message:" + message);
-        ByteBuffer bBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
+
         List<BroadcastSocketServer> userList = users.get(planetId);
         for (BroadcastSocketServer user : userList) {
             if (user.equals(this)) continue;  // 不给自己发
+            // 不能放在循环外面否则只能把消息发给第一个用户，其他用户收到的消息是空的
+            ByteBuffer bBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
             user.session.getAsyncRemote().sendBinary(bBuffer);
         }
     }
-
-//    private void sendMessage(Integer planetId, Object message) {
-//        List<BroadcastSocketServer> userList = users.get(planetId);
-//        for (BroadcastSocketServer user : userList) {
-//            if (user.equals(this)) continue;  // 不给自己发
-//            user.session.getAsyncRemote().sendObject(message);  // 异步发送消息
-//        }
-//    }
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
         Integer operation;
