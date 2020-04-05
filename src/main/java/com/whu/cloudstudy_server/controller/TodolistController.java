@@ -35,14 +35,14 @@ public class TodolistController {
     }
 
     @PostMapping(value = "/todoList/changePriority")
-    public Response changePriority(Integer id,Integer newPriority){
+    public Response changePriority(Integer id,Integer priority){
         Response response;
         TodolistItem todolistItem=todolistService.findTodolistItemById(id);
         if(todolistItem==null){
             response=new Response(-1, "无该条目", null);
             return response;
         }
-        todolistItem.setPriority(newPriority);
+        todolistItem.setPriority(priority);
         int cnt=todolistService.updateTodolistItemInfo(todolistItem);
         if(cnt<=0){
             response=new Response(-2, "改表失败", null);
