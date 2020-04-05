@@ -23,9 +23,9 @@ public class TodolistController {
     TodolistService todolistService;
 
     @PostMapping(value = "/getList")
-    public Response queryAllTodoList(Integer userId){
+    public Response queryAllTodoList(Integer id){
         Response response;
-        List<Object> result=todolistService.findTodolistAndItem(userId);
+        List<Object> result=todolistService.findTodolistAndItem(id);
         if(result==null){
             response=new Response(-1, "失败", null);
             return response;
