@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface TodolistItemMapper {
     List<TodolistItem> findTodolistItemByTodolistId(Integer todolistId);
+    TodolistItem findTodolistItemById(Integer id);
     int insertTodolistItem(TodolistItem todolistItem);
     int deleteTodolistItemById(Integer id);
     int updateTodolistItemInfo(TodolistItem todolistItem);

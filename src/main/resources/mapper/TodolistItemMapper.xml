@@ -16,6 +16,10 @@
         select * from TodolistItem where todolistId = #{todolistId}
     </select>
 
+    <select id="findTodolistItemById" resultType="com.whu.cloudstudy_server.entity.TodolistItem">
+        select * from TodolistItem where id = #{id}
+    </select>
+
     <update id="updateTodolistItemInfo" parameterType="com.whu.cloudstudy_server.entity.TodolistItem">
         update TodolistItem
         <trim prefix="set" suffixOverrides=",">
