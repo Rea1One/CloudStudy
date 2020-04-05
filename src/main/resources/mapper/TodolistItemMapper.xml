@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whu.cloudstudy_server.mapper.TodolistItemMapper">
+
+    <insert id="insertTodolistItem" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.TodolistItem">
+        insert into TodolistItem (todolistId, content, priority)
+        values (#{todolistId}, #{content}, #{priority})
+    </insert>
+
+    <delete id="deleteTodolistItemById" parameterType="java.lang.Integer">
+        delete from TodolistItem where id = #{id}
+    </delete>
+
+    <select id="findTodolistItemByTodolistId" resultType="com.whu.cloudstudy_server.entity.TodolistItem">
+        select * from TodolistItem where todolistId = #{todolistId}
+    </select>
+
+    <update id="updateTodolistItemInfo" parameterType="com.whu.cloudstudy_server.entity.TodolistItem">
+        update TodolistItem
+        <trim prefix="set" suffixOverrides=",">
+            <if test="content!=null">content = #{content},</if>
+            <if test="priority!=null">priority = #{priority},</if>
+            <if test="isFinished!=null">isFinished = #{isFinished},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

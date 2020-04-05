@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whu.cloudstudy_server.mapper.CountDownMapper">
+
+    <insert id="insertCountDown" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.CountDown">
+        insert into CountDown (userId, name, remark, endTime)
+        values (#{userId}, #{name}, #{remark}, #{endTime})
+    </insert>
+
+    <delete id="deleteCountDownById" parameterType="java.lang.Integer">
+        delete from CountDown where id = #{id}
+    </delete>
+
+    <select id="findCountDownByUserId" resultType="com.whu.cloudstudy_server.entity.CountDown">
+        select * from CountDown where userId = #{userId}
+    </select>
+
+    <update id="updateCountDownInfo" parameterType="com.whu.cloudstudy_server.entity.CountDown">
+        update CountDown
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">name = #{name},</if>
+            <if test="remark!=null">remark = #{remark},</if>
+            <if test="endTime">endTime = #{endTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

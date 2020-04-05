@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whu.cloudstudy_server.mapper.TodolistMapper">
+
+    <insert id="insertTodolist" useGeneratedKeys="true" keyProperty="id" parameterType="com.whu.cloudstudy_server.entity.Todolist">
+        insert into Todolist (userId, name)
+        values (#{userId}, #{name})
+    </insert>
+
+    <delete id="deleteTodolistById" parameterType="java.lang.Integer">
+        delete from Todolist where id = #{id}
+    </delete>
+
+    <select id="findTodolistByUserId" resultType="com.whu.cloudstudy_server.entity.Todolist">
+        select * from Todolist where userId = #{userId}
+    </select>
+
+</mapper>
