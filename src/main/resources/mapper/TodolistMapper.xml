@@ -16,4 +16,8 @@
         select * from Todolist where userId = #{userId}
     </select>
 
+    <select id="findListById" resultType="com.whu.cloudstudy_server.entity.Todolist">
+        select * from Todolist where id = #{id}
+    </select>
+
 </mapper>

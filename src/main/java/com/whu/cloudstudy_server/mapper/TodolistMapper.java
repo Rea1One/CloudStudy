@@ -13,5 +13,6 @@ public interface TodolistMapper {
     int insertTodolist(Todolist todolist);
     int deleteTodolistById(Integer id);
     List<Todolist> findTodolistByUserId(Integer userId);
+    Todolist findListById(Integer id);
 }
 
