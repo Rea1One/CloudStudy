@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public interface CountDownMapper {
+    CountDown findCountDownById(Integer id);
     List<CountDown> findCountDownByUserId(Integer userId);
     int insertCountDown(CountDown countDown);
     int deleteCountDownById(Integer id);

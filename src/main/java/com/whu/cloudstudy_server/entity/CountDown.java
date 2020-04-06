@@ -12,7 +12,7 @@ public class CountDown {
     private Integer userId;
     private String name;
     private String remark;
-    private Timestamp endTime;
+    private String endTime;
 
     public void setId(Integer id){
         this.id=id;
@@ -46,11 +46,11 @@ public class CountDown {
         return remark;
     }
 
-    public void setEndTime(Timestamp endTime){
+    public void setEndTime(String endTime){
         this.endTime=endTime;
     }
 
-    public Timestamp getEndTime(){
+    public String getEndTime(){
         return endTime;
     }
 }

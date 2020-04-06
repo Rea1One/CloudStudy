@@ -12,6 +12,10 @@
         delete from CountDown where id = #{id}
     </delete>
 
+    <select id="findCountDownById" resultType="com.whu.cloudstudy_server.entity.CountDown">
+        select * from CountDown where id = #{id}
+    </select>
+
     <select id="findCountDownByUserId" resultType="com.whu.cloudstudy_server.entity.CountDown">
         select * from CountDown where userId = #{userId}
     </select>
