@@ -90,9 +90,6 @@ public class WebSocketServer {
         prevTime = System.currentTimeMillis();
     }
 
-//    private void sendMessage(Integer userId, String message) {
-//        clients.get(userId).session.getAsyncRemote().sendText(message);
-//    }
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
         int ret = recordService.stopStudy(userId, planetId, 1);

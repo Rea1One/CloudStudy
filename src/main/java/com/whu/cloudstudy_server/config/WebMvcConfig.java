@@ -18,12 +18,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler(imagePathPattern)
                 .addResourceLocations("file:/CloudStudy/Images/");
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("*")
-//                .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH")
-//                .allowCredentials(true).maxAge(3600);
-//    }
 }

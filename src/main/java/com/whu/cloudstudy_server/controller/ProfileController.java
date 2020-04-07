@@ -19,13 +19,13 @@ public class ProfileController {
     private ProfileService profileService;
 
     @PostMapping("/changeProfile")
-    public Response changeProfile(Integer id, MultipartFile data) {
-        Response response;
+    public Response<Object> changeProfile(Integer id, MultipartFile data) {
+        Response<Object> response;
         String ret = profileService.changeProfile(id, data);
         if (ret != null) {
-            response = new Response(0, "成功", ret);
+            response = new Response<>(0, "成功", ret);
         } else {
-            response = new Response(-1, "失败", null);
+            response = new Response<>(-1, "失败", null);
         }
         return response;
     }

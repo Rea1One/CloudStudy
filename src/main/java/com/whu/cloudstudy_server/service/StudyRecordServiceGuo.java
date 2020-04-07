@@ -29,7 +29,7 @@ public class StudyRecordServiceGuo {
      *
      * @param userId
      * @param planetId
-     * @return 插入StudyRecord的记录条数
+     * @return 0: 成功
      */
     @Transactional
     public int startStudy(Integer userId, Integer planetId) {
@@ -62,8 +62,8 @@ public class StudyRecordServiceGuo {
      *
      * @param userId
      * @param planetId
-     * @param operation 1: 正常用户停止自习  3: 主播停止直播
-     * @return 错误/成功代码
+     * @param operation 1: 普通用户停止自习  3: 主播停止直播
+     * @return 0: 成功
      */
     @Transactional
     public int stopStudy(Integer userId, Integer planetId, Integer operation) {

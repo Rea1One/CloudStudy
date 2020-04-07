@@ -26,6 +26,12 @@ public class PlanetServiceGuo {
     @Autowired(required = false)
     private StudyRecordMapper recordMapper;
 
+    /**
+     * 根据关键词搜索星球
+     *
+     * @param keyword
+     * @return 查找结果: List<Planet>
+     */
     public List<Planet> searchPlanet(String keyword) {
         Planet singleResult = planetMapper.findPlanetByCode(keyword);
         if (singleResult != null) {
@@ -38,12 +44,19 @@ public class PlanetServiceGuo {
         }
     }
 
-    public Response enterPlanet(Integer planetId, Integer userId) {
-        Response response;
+    /**
+     * 用户进入星球
+     *
+     * @param planetId
+     * @param userId
+     * @return Response<Object>
+     */
+    public Response<Object> enterPlanet(Integer planetId, Integer userId) {
+        Response<Object> response;
         List<User> users = uapMapper.findAllUserByPlanetId(planetId);
         Planet currPlanet = planetMapper.findPlanetById(planetId);
         if (users.size() == 0 || currPlanet == null) {
-            response = new Response(-1, "星球不存在", null);
+            response = new Response<>(-1, "星球不存在", null);
             return response;
         }
         List<Object> retData = new LinkedList<>();
@@ -104,18 +117,29 @@ public class PlanetServiceGuo {
             }
         }
         if (cUsers.size() == 0) {
-            response = new Response(-2, "获取用户列表失败", null);
+            response = new Response<>(-2, "获取用户列表失败", null);
             return response;
         }
         retData.add(cUsers);
-        response = new Response(0, "成功", retData);
+        response = new Response<>(0, "成功", retData);
         return response;
     }
 
-    // 退出星球
+    /**
+     * 用户退出星球
+     *
+     * @param planetId
+     * @param userId
+     * @return 0: 成功
+     */
     @Transactional
     public int leavePlanet(Integer planetId, Integer userId) {
         UserAndPlanet target = uapMapper.findUAPByPlanetIdAndUserId(planetId, userId);
+        // 删除学习记录
+        List<StudyRecord> records = recordMapper.findAllByUserIdAndPlanetId(userId, planetId);
+        for (StudyRecord record : records) {
+            recordMapper.deleteStudyRecordById(record.getId());
+        }
         if (target == null) {
             return -1;  // 记录不存在
         }
@@ -127,7 +151,11 @@ public class PlanetServiceGuo {
         }
     }
 
-    //处理返回用户信息 隐藏密码和邮箱
+    /**
+     * 处理返回用户信息, 隐藏密码和邮箱
+     *
+     * @param user
+     */
     private void processInfo(CustomizedUser user) {
         int i;
         String before = user.getEmail();
