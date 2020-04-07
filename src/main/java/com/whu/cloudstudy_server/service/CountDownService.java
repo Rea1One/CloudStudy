@@ -30,7 +30,7 @@ public class CountDownService {
      * @return
      */
 
-    public int createCountDown(Integer userId,String name,String remark,String endTime){
+    public Response<Object> createCountDown(Integer userId,String name,String remark,String endTime){
         CountDown countDown = new CountDown();
         countDown.setUserId(userId);
         countDown.setName(name);
@@ -38,10 +38,10 @@ public class CountDownService {
         countDown.setEndTime(endTime);
         int cnt = countDownMapper.insertCountDown(countDown);
         if(cnt > 0){
-            return 0;
+            return new Response<>(0, "创建成功", countDown.getId());
         }
         else{
-            return -1;
+            return new Response<>(-1, "创建失败", null);
         }
     }
 

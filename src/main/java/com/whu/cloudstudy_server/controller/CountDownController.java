@@ -22,21 +22,8 @@ public class CountDownController {
 
     //创建倒计时
     @PostMapping(value = "/createCountDown")
-    public Response createCountDown(Integer userId,String name,String remark,String endTime){
-        int ret = countDownService.createCountDown(userId,name,remark,endTime);
-        Response response;
-        switch (ret){
-            case 0:
-                response = new Response(0, "创建成功", null);
-                break;
-            case -1:
-                response = new Response(-1, "创建失败", null);
-                break;
-            default:
-                response = new Response(-2, "失败", null);
-                break;
-        }
-        return response;
+    public Response<Object> createCountDown(Integer userId,String name,String remark,String endTime){
+        return countDownService.createCountDown(userId,name,remark,endTime);
     }
 
     //修改倒计时

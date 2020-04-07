@@ -17,7 +17,7 @@
     </select>
 
     <select id="findCountDownByUserId" resultType="com.whu.cloudstudy_server.entity.CountDown">
-        select * from CountDown where userId = #{userId}
+        select * from CountDown where userId = #{userId} order by endTime ASC
     </select>
 
     <update id="updateCountDownInfo" parameterType="com.whu.cloudstudy_server.entity.CountDown">
