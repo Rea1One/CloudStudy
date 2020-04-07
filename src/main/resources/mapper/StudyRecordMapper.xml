@@ -13,6 +13,10 @@
         delete from StudyRecord where id = #{id}
     </delete>
 
+    <delete id="deleteStudyRecordByPlanetId" parameterType="java.lang.Integer">
+        delete from StudyRecord where planetId = #{planetId}
+    </delete>
+
     <select id="findLatestStudyRecordByUserIdAndPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
         select * from StudyRecord where userId = #{userId} and planetId = #{planetId} order by time desc limit 1
     </select>
