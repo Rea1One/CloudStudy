@@ -19,64 +19,64 @@ public class ValidateCodeController {
     private ValidateCodeService codeService;
 
     @PostMapping(value = "/sendValidateCode")
-    public Response sendValidateCode(String email, Integer type) {
+    public Response<Object> sendValidateCode(String email, Integer type) {
         int ret = codeService.sendCode(email, type);
-        Response response;
+        Response<Object> response;
         switch (ret) {
             case 0:
-                response = new Response(0, "成功", null);
+                response = new Response<>(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1, "邮箱重复", null);
+                response = new Response<>(-1, "邮箱重复", null);
                 break;
             case -2:
-                response = new Response(-2, "用户不存在", null);
+                response = new Response<>(-2, "用户不存在", null);
                 break;
             case -3:
-                response = new Response(-3, "验证码发送失败", null);
+                response = new Response<>(-3, "验证码发送失败", null);
                 break;
             default:
-                response = new Response(-4, "失败", null);
+                response = new Response<>(-4, "失败", null);
                 break;
         }
         return response;
     }
 
     @PostMapping(value = "/register")
-    public Response register(String name, String password, Integer gender,
+    public Response<Object> register(String name, String password, Integer gender,
                              String introduction, String email, Integer code, Integer age) {
         int ret = codeService.register(name, password, gender, introduction, email, code, age);
-        Response response;
+        Response<Object> response;
         switch (ret) {
             case 0:
-                response = new Response(0, "成功", null);
+                response = new Response<>(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1, "验证码错误", null);
+                response = new Response<>(-1, "验证码错误", null);
                 break;
             case -2:
-                response = new Response(-2, "插入用户数据失败", null);
+                response = new Response<>(-2, "插入用户数据失败", null);
                 break;
             default:
-                response = new Response(-3, "失败", null);
+                response = new Response<>(-3, "失败", null);
                 break;
         }
         return response;
     }
 
     @PostMapping(value = "/validateCode")
-    public Response validateCode(String email, Integer code) {
+    public Response<Object> validateCode(String email, Integer code) {
         int ret = codeService.validateCode(email, code);
-        Response response;
+        Response<Object> response;
         switch (ret) {
             case 0:
-                response = new Response(0, "成功", null);
+                response = new Response<>(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1, "验证码错误", null);
+                response = new Response<>(-1, "验证码错误", null);
                 break;
             default:
-                response = new Response(-2, "失败", null);
+                response = new Response<>(-2, "失败", null);
                 break;
         }
         return response;

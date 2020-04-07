@@ -24,7 +24,7 @@ public class ValidateCodeService {
      * 获取验证码
      *
      * @param email 用户邮箱
-     * @return
+     * @return 0: 成功
      */
     public int sendCode(String email, Integer type) {
         User user = userMapper.findUserByEmail(email);

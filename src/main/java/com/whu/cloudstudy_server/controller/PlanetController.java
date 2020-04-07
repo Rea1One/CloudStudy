@@ -23,40 +23,40 @@ public class PlanetController {
 
     // 搜索星球
     @PostMapping(value = "/searchPlanet")
-    public Response searchPlanet(String keyword) {
-        Response response;
+    public Response<Object> searchPlanet(String keyword) {
+        Response<Object> response;
         List<Planet> planets = planetService.searchPlanet(keyword);
         if (planets.size() == 0) {
-            response = new Response(-1, "无搜索结果", null);
+            response = new Response<>(-1, "无搜索结果", null);
             return response;
         }
-        response = new Response(0, "成功", planets);
+        response = new Response<>(0, "成功", planets);
         return response;
     }
 
     // 进入星球
     @PostMapping(value = "/planet/enterPlanet")
-    public Response enterPlanet(Integer planetId, Integer userId) {
+    public Response<Object> enterPlanet(Integer planetId, Integer userId) {
         return planetService.enterPlanet(planetId, userId);
     }
 
     // 退出星球
     @PostMapping(value = "/leavePlanet")
-    public Response leavePlanet(Integer planetId, Integer userId) {
-        Response response;
+    public Response<Object> leavePlanet(Integer planetId, Integer userId) {
+        Response<Object> response;
         int ret = planetService.leavePlanet(planetId, userId);
         switch (ret) {
             case 0:
-                response = new Response(0, "成功", null);
+                response = new Response<>(0, "成功", null);
                 break;
             case -1:
-                response = new Response(-1, "记录不存在", null);
+                response = new Response<>(-1, "记录不存在", null);
                 break;
             case -2:
-                response = new Response(-2, "删除记录失败", null);
+                response = new Response<>(-2, "删除记录失败", null);
                 break;
             default:
-                response = new Response(-3, "失败", null);
+                response = new Response<>(-3, "失败", null);
                 break;
         }
         return response;

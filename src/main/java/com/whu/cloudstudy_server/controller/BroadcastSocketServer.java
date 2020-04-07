@@ -1,8 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
 import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
-import com.whu.cloudstudy_server.util.Response;
-import com.whu.cloudstudy_server.util.ServerEncoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -51,8 +49,9 @@ public class BroadcastSocketServer {
     }
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") Integer userId, @PathParam("planetId") Integer planetId,
-                       @PathParam("userName") String userName, @PathParam("profileUrl") String profileUrl, @PathParam("type") int type) {
+    public void onOpen(Session session, @PathParam("userId") Integer userId,
+                       @PathParam("planetId") Integer planetId, @PathParam("userName") String userName,
+                       @PathParam("profileUrl") String profileUrl, @PathParam("type") int type) {
         this.session = session;
         this.userId = userId;
         this.planetId = planetId;
@@ -116,6 +115,14 @@ public class BroadcastSocketServer {
         myOnMessage(jsonMsg);
     }
 
+    /**
+     * 根据接收到的 id 执行相应动作
+     * id == 0 --> 监测用户是否在线 (heartbeat)
+     * id == -1 --> 主播下线, 关闭星球内其他人的连接
+     * other --> 新用户加入直播星球
+     *
+     * @param jsonMsg 接收到的 JSON 字符串
+     */
     private void myOnMessage(String jsonMsg) {
         log.info("Received message: " + jsonMsg);
         JSONObject jo = new JSONObject(jsonMsg);
@@ -136,9 +143,14 @@ public class BroadcastSocketServer {
         }
     }
 
+    /**
+     * 将 message 发送给星球内其他用户
+     *
+     * @param planetId
+     * @param message
+     */
     private void sendMessage(Integer planetId, String message) {
         log.info("Sent message:" + message);
-
         List<BroadcastSocketServer> userList = users.get(planetId);
         for (BroadcastSocketServer user : userList) {
             if (user.equals(this)) continue;  // 不给自己发
@@ -150,9 +162,9 @@ public class BroadcastSocketServer {
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
         Integer operation;
-        if (type == 1) {
+        if (type == 1) {  // 主播
             operation = 3;
-        } else {
+        } else {  // 普通用户
             operation = 1;
         }
         int ret = recordService.stopStudy(userId, planetId, operation);

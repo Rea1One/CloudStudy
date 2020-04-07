@@ -18,6 +18,13 @@ public class ProfileService {
     @Autowired
     UserService userService;
 
+    /**
+     * 修改头像
+     *
+     * @param id 用户 id
+     * @param data 新图片
+     * @return 新图片的 url 地址
+     */
     @Transactional
     public String changeProfile(Integer id, MultipartFile data) {
         User user = userService.findUserById(id);
