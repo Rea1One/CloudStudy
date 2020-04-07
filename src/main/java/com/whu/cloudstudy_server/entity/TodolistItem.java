@@ -48,7 +48,7 @@ public class TodolistItem {
         this.isFinished=isFinished;
     }
 
-    private Integer getIsFinished(){
+    public Integer getIsFinished(){
         return isFinished;
     }
 }
