@@ -104,11 +104,7 @@ public class StatisticService {
         Map<Planet,Long> planetAndTime=new HashMap<>();
         for(Planet p:planets){
             List<StudyRecord> records=studyRecordMapper.findAllByUserIdAndPlanetIdAndTimeBetween(id,p.getId(),startTime,stopTime);
-            if(records.size()==0){
-                p.setPassword(null);
-                planetAndTime.put(p,(long)0);
-                continue;
-            }
+            if(records.size()==0) continue;
             if(records.get(records.size()-1).getOperation()==0) records.remove(records.size()-1);
             long total=0;
             for(int j=0;j<records.size();j+=2){
