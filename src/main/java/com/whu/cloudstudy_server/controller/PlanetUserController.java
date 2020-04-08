@@ -36,4 +36,23 @@ public class PlanetUserController {
         }
         return response;
     }
+
+    //删除星球
+    @PostMapping(value = "/destroyPlanet")
+    public Response destroyPlanet(Integer id){
+        int ret = planetService.destroyPlanet(id);
+        Response response;
+        switch (ret) {
+            case 0:
+                response = new Response(0, "删除成功", null);
+                break;
+            case -1:
+                response = new Response(-1, "删除星球失败", null);
+                break;
+            default:
+                response = new Response(-2, "失败", null);
+                break;
+        }
+        return response;
+    }
 }

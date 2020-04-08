@@ -29,4 +29,8 @@
         delete from UserAndPlanet where id = #{id}
     </delete>
 
+    <delete id="deleteUserAndPlanetByPlanetId" parameterType="java.lang.Integer">
+        delete from UserAndPlanet where planetId = #{planetId}
+    </delete>
+
 </mapper>
