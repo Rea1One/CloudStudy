@@ -119,7 +119,6 @@ public class UserController {
             response = new Response(-1, "失败", null);
             return response;
         }
-        for (Planet p : planets) p.setPassword(null);
         response = new Response(0, "成功", planets);
         return response;
     }
