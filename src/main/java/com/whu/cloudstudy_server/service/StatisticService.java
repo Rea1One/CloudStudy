@@ -1,7 +1,9 @@
 package com.whu.cloudstudy_server.service;
 
+import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.entity.StudyRecord;
 import com.whu.cloudstudy_server.mapper.StudyRecordMapper;
+import com.whu.cloudstudy_server.mapper.UserAndPlanetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +87,50 @@ public class StatisticService {
             studyTime.put(i,total);
         }
         return studyTime;
+    }
+
+    @Autowired(required = false)
+    UserAndPlanetMapper userAndPlanetMapper;
+
+    @Transactional
+    public List<Planet> getThreeMostPlanet(Integer id){
+        Calendar calendar=Calendar.getInstance();
+        calendar.clear(); //清除缓存
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Timestamp startTime=new Timestamp(getWeekStartTime(calendar.getTimeInMillis()));
+        Timestamp stopTime=new Timestamp(getWeekEndTime(calendar.getTimeInMillis()));
+        List<Planet> planets=userAndPlanetMapper.findPlanetByUserId(id);
+        if(planets==null) return new ArrayList<>();
+        Map<Planet,Long> planetAndTime=new HashMap<>();
+        for(Planet p:planets){
+            List<StudyRecord> records=studyRecordMapper.findAllByUserIdAndPlanetIdAndTimeBetween(id,p.getId(),startTime,stopTime);
+            if(records.size()==0){
+                p.setPassword(null);
+                planetAndTime.put(p,(long)0);
+                continue;
+            }
+            if(records.get(records.size()-1).getOperation()==0) records.remove(records.size()-1);
+            long total=0;
+            for(int j=0;j<records.size();j+=2){
+                long time=(records.get(j+1).getTime().getTime()-records.get(j).getTime().getTime()) / (long)(1000*60);
+                total+=time;
+            }
+            p.setPassword(null);
+            planetAndTime.put(p,total);
+        }
+        List<Map.Entry<Planet,Long>> rank = new ArrayList<>(planetAndTime.entrySet());
+        Collections.sort(rank,new Comparator<Map.Entry<Planet,Long>>() {
+            //按键值降序排序
+            public int compare(Map.Entry<Planet,Long> o1,
+                               Map.Entry<Planet,Long> o2) {
+                return -(o1.getValue().compareTo(o2.getValue()));
+            }
+        });
+        List<Planet> result=new ArrayList<>();
+        for(Map.Entry<Planet,Long> r:rank)
+            result.add(r.getKey());
+        if(result.size()<3) return result;
+        return result.subList(0,3);
     }
 
     /**

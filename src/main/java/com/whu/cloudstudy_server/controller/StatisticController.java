@@ -1,5 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
+import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.service.StatisticService;
 import com.whu.cloudstudy_server.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,18 @@ public class StatisticController {
             return response;
         }
         response=new Response(0, "成功", studyTime);
+        return response;
+    }
+
+    @PostMapping(value = "/queryThreeMost")
+    public Response queryThreeMost(Integer id){
+        Response response;
+        List<Planet> planets=statisticService.getThreeMostPlanet(id);
+        if(planets==null){
+            response=new Response(-1,"失败", null);
+            return response;
+        }
+        response=new Response(0,"成功", planets);
         return response;
     }
 }
