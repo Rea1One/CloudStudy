@@ -111,7 +111,6 @@ public class StatisticService {
                 long time=(records.get(j+1).getTime().getTime()-records.get(j).getTime().getTime()) / (long)(1000*60);
                 total+=time;
             }
-            p.setPassword(null);
             planetAndTime.put(p,total);
         }
         List<Map.Entry<Planet,Long>> rank = new ArrayList<>(planetAndTime.entrySet());
