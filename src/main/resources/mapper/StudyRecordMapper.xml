@@ -46,4 +46,8 @@
     <select id="findAllByUserIdAndPlanetId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
         select * from StudyRecord where userId = #{userId} and planetId = #{planetId}
     </select>
+
+    <select id="findAllByUserId" resultType="com.whu.cloudstudy_server.entity.StudyRecord">
+        select * from StudyRecord where userId = #{userId}
+    </select>
 </mapper>

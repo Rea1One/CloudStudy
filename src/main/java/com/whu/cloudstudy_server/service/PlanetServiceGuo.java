@@ -1,5 +1,6 @@
 package com.whu.cloudstudy_server.service;
 
+import com.whu.cloudstudy_server.mapper.UserMapper;
 import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.*;
 import com.whu.cloudstudy_server.mapper.PlanetMapper;
@@ -134,12 +135,14 @@ public class PlanetServiceGuo {
      */
     @Transactional
     public int leavePlanet(Integer planetId, Integer userId) {
-        UserAndPlanet target = uapMapper.findUAPByPlanetIdAndUserId(planetId, userId);
         // 删除学习记录
         List<StudyRecord> records = recordMapper.findAllByUserIdAndPlanetId(userId, planetId);
         for (StudyRecord record : records) {
             recordMapper.deleteStudyRecordById(record.getId());
         }
+
+        // 删除用户星球关系记录
+        UserAndPlanet target = uapMapper.findUAPByPlanetIdAndUserId(planetId, userId);
         if (target == null) {
             return -1;  // 记录不存在
         }

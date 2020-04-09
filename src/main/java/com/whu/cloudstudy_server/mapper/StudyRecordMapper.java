@@ -20,4 +20,5 @@ public interface StudyRecordMapper {
     List<StudyRecord> findAllByUserIdAndGalaxyAndTimeBetween(Integer userId,Integer galaxy,Timestamp startTime,Timestamp stopTime);
     List<StudyRecord> findAllByUserIdAndPlanetId(Integer userId, Integer planetId);
     List<StudyRecord> findAllByUserIdAndPlanetIdAndTimeBetween(Integer userId,Integer planetId,Timestamp startTime,Timestamp stopTime);
+    List<StudyRecord> findAllByUserId(Integer userId);
 }

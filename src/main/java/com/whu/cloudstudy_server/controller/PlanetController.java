@@ -1,5 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
+import com.whu.cloudstudy_server.service.StudyTimeService;
 import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.Planet;
 import com.whu.cloudstudy_server.service.PlanetServiceGuo;
@@ -20,6 +21,8 @@ import java.util.List;
 public class PlanetController {
     @Autowired
     private PlanetServiceGuo planetService;
+    @Autowired
+    private StudyTimeService timeService;
 
     // 搜索星球
     @PostMapping(value = "/searchPlanet")
@@ -45,6 +48,7 @@ public class PlanetController {
     public Response<Object> leavePlanet(Integer planetId, Integer userId) {
         Response<Object> response;
         int ret = planetService.leavePlanet(planetId, userId);
+        timeService.getTotalStudyTimeFromRecord(userId);  // 更新用户总自习时长
         switch (ret) {
             case 0:
                 response = new Response<>(0, "成功", null);
