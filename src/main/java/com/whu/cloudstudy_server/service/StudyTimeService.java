@@ -39,6 +39,10 @@ public class StudyTimeService {
         }
         if (!user.getStudyTime().equals(totalMin)) {
             user.setStudyTime(totalMin);
+            int cnt = userMapper.updateUserInfo(user);
+            if (cnt == 0) {
+                return -2;  // 修改自习时长失败
+            }
         }
         return totalMin;
     }

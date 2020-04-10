@@ -27,6 +27,10 @@ public class StudyTimeController {
             response = new Response<>(-1, "用户不存在", null);
             return response;
         }
+        if (totalTime == -2) {
+            response = new Response<>(-2, "修改自习时长失败", null);
+            return response;
+        }
         response = new Response<>(0, "成功", totalTime);
         return response;
     }
