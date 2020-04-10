@@ -13,6 +13,7 @@ public interface PlanetMapper {
     Planet findPlanetByCode(String code);
     List<Planet> findPlanetByName(String name);
     List<Planet> findPlanetByGalaxy(Integer galaxy,Integer batchNum);
+    int findPlanetCountByUserId(Integer creatorId);
     int insertPlanet(Planet planet);
     int updatePlanetInfo(Planet planet);
     int deletePlanet(Integer id);

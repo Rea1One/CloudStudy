@@ -5,6 +5,7 @@ import com.whu.cloudstudy_server.util.Response;
 import com.whu.cloudstudy_server.entity.*;
 import com.whu.cloudstudy_server.mapper.PlanetMapper;
 import com.whu.cloudstudy_server.mapper.UserAndPlanetMapper;
+import com.whu.cloudstudy_server.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class PlanetServiceHu{
 
     @Autowired(required = false)
     private StudyRecordMapper studyRecordMapper;
+
+    @Autowired(required = false)
+    private UserMapper userMapper;
 
     /**
      * 创建星球
@@ -65,8 +69,13 @@ public class PlanetServiceHu{
                 return new Response<>(-2, "当前星球不应设置密码", null);
             }
         }
+        User user = userMapper.findUserById(creatorId);
+        int studytime = user.getStudyTime();
+        int count = planetMapper.findPlanetCountByUserId(creatorId);
+        if (studytime / 120 - count < 1){
+            return new Response<>(-3, "额度不足", null);
+        }
         int cnt = planetMapper.insertPlanet(planet);
-        planet = planetMapper.findPlanetByCode(randcode);
         int planetId=planet.getId();
         UserAndPlanet userAndPlanet =new UserAndPlanet();
         userAndPlanet.setUserId(creatorId);
@@ -75,11 +84,11 @@ public class PlanetServiceHu{
         List returnIdAndCode = new ArrayList();
         returnIdAndCode.add(planetId);
         returnIdAndCode.add(randcode);
-        if (cnt + cnt2 > 0) {
+        if (cnt + cnt2 >= 0){
             return new Response<>(0, "成功", returnIdAndCode);
         }
-        else {
-            return new Response<>(-3, "创建星球失败", null);
+        else{
+            return new Response<>(-4, "失败", null);
         }
     }
 
