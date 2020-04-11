@@ -1,6 +1,6 @@
 package com.whu.cloudstudy_server.controller;
 
-import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
+import com.whu.cloudstudy_server.service.StudyRecordService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -41,10 +41,10 @@ public class BroadcastSocketServer {
 
     private static Log log = LogFactory.getLog(BroadcastSocketServer.class);
 
-    private static StudyRecordServiceGuo recordService;
+    private static StudyRecordService recordService;
 
     @Autowired
-    public void setService(StudyRecordServiceGuo recordService) {
+    public void setService(StudyRecordService recordService) {
         BroadcastSocketServer.recordService = recordService;
     }
 
