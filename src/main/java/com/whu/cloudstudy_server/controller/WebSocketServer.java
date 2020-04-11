@@ -1,12 +1,10 @@
 package com.whu.cloudstudy_server.controller;
 
 
-import com.whu.cloudstudy_server.service.StudyRecordServiceGuo;
+import com.whu.cloudstudy_server.service.StudyRecordService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -44,10 +42,10 @@ public class WebSocketServer {
 
     private static Log log = LogFactory.getLog(WebSocketServer.class);
 
-    private static StudyRecordServiceGuo recordService;
+    private static StudyRecordService recordService;
 
     @Autowired
-    public void setService(StudyRecordServiceGuo recordService) {
+    public void setService(StudyRecordService recordService) {
         WebSocketServer.recordService = recordService;
     }
 
