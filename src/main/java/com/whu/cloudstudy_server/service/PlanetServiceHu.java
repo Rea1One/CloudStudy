@@ -114,24 +114,6 @@ public class PlanetServiceHu{
         }
     }
 
-    /**
-     * 删除星球
-     *
-     * @param id
-     * @return
-     */
-    public int destroyPlanet(Integer id){
-        int cnt1 = planetMapper.deletePlanet(id);
-        int cnt2 = userAndPlanetMapper.deleteUserAndPlanetByPlanetId(id);
-        int cnt3 = studyRecordMapper.deleteStudyRecordByPlanetId(id);
-        if(cnt1 + cnt2 + cnt3 > 0 ){
-            return 0;
-        }
-        else{
-            return 1;
-        }
-    }
-
     //生成code 8位随机数
     private static String randomCode() {
         int  maxNum = 10;
