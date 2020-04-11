@@ -130,7 +130,6 @@ public class StatisticService {
 
     /**
      * 获取指定某一天的开始时间戳
-     *
      * @param timeStamp 毫秒级时间戳
      * @return
      */
@@ -146,7 +145,6 @@ public class StatisticService {
 
     /**
      * 获取指定某一天的结束时间戳
-     *
      * @param timeStamp 毫秒级时间戳
      * @return
      */
@@ -162,6 +160,7 @@ public class StatisticService {
 
     /**
      * 获取当周开始时间戳
+     * @param timeStamp 毫秒级时间戳
      */
     public static Long getWeekStartTime(Long timeStamp) {
         Calendar calendar = Calendar.getInstance();
@@ -176,6 +175,7 @@ public class StatisticService {
 
     /**
      * 获取当周的结束时间戳
+     * @param timeStamp 毫秒级时间戳
      */
     public static Long getWeekEndTime(Long timeStamp) {
         Calendar calendar = Calendar.getInstance();
@@ -190,7 +190,6 @@ public class StatisticService {
 
     /**
      * 获取当月开始时间戳
-     *
      * @param timeStamp 毫秒级时间戳
      * @return
      */
@@ -209,7 +208,6 @@ public class StatisticService {
 
     /**
      * 获取当月的结束时间戳
-     *
      * @param timeStamp 毫秒级时间戳
      * @return
      */
