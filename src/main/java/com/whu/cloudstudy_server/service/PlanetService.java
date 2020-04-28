@@ -125,6 +125,10 @@ public class PlanetService {
             return response;
         }
         if (planet.getCategory() == 1) {
+            if(planet.getPopulation()==6){
+                response = new Response<>(-4, "星球人数已满", null);
+                return response;
+            }
             if (password == null) {
                 response = new Response<>(-2, "请输入密码", null);
                 return response;
@@ -137,10 +141,6 @@ public class PlanetService {
         userAndPlanet.setUserId(userId);
         userAndPlanet.setPlanetId(planetId);
         int cnt1 = uapMapper.insertUserAndPlanet(userAndPlanet);
-        if (cnt1 == -1) {
-            response = new Response<>(-4, "已经加入过该星球", null);
-            return response;
-        }
         if (cnt1 <= 0) {
             response = new Response<>(-5, "插入用户-星球关系数据失败", null);
             return response;
