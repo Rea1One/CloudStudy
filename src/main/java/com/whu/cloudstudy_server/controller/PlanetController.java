@@ -110,8 +110,14 @@ public class PlanetController {
             case -2:
                 response = new Response<>(-2, "删除记录失败", null);
                 break;
+            case -3:
+                response = new Response<>(-3, "星球不存在", null);
+                break;
+            case -4:
+                response = new Response<>(-4, "更新星球人数失败", null);
+                break;
             default:
-                response = new Response<>(-3, "失败", null);
+                response = new Response<>(-5, "失败", null);
                 break;
         }
         return response;

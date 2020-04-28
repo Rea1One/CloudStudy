@@ -301,6 +301,18 @@ public class PlanetService {
             recordMapper.deleteStudyRecordById(record.getId());
         }
 
+        // 更新星球表中的 population
+        Planet planet = planetMapper.findPlanetById(planetId);
+        if (planet == null) {
+            return -3;  // 星球不存在
+        }
+        Integer po = planet.getPopulation();
+        planet.setPopulation(po - 1);
+        int n = planetMapper.updatePlanetInfo(planet);
+        if (n <= 0) {
+            return -4;  // 更新星球人数失败
+        }
+
         // 删除用户星球关系记录
         UserAndPlanet target = uapMapper.findUAPByPlanetIdAndUserId(planetId, userId);
         if (target == null) {
