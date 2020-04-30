@@ -10,9 +10,9 @@ import java.util.Properties;
  * Date: 2020-02-24
  */
 public class EmailUtil {
-    private String from = "1301702486@qq.com";
+    private String from = "********@qq.com";
 
-    private String password = "dupebescahumgfcc";
+    private String password = "***********";
 
     private String host = "smtp.qq.com";
 
