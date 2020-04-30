@@ -3,6 +3,7 @@ package com.whu.cloudstudy_server.controller;
 import com.whu.cloudstudy_server.service.StudyRecordService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,51 +18,47 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Author: 郭瑞景
- * Date: 2020-03-16
+ * Date: 2020-04-29
  */
 
-@ServerEndpoint(value = "/broadcastServer/{userId}/{planetId}/{userName}/{profileUrl}/{type}")
+@ServerEndpoint("/groupStudyServer/{userId}/{planetId}")
 @Component
-public class BroadcastSocketServer {
+public class DiscussSocketServer {
     private Session session;
     private Integer userId;
     private Integer planetId;
-    private boolean isFrontCam;  // 前置摄像头为 true, 后置摄像头为 false
-    private Integer type;  // 1是主播  0不是主播
+    private boolean isFrontCam;
     private Timer timer;
     private long prevTime;
 
     // 存放所有连接服务的客户端，根据星球 id 将用户分组
-    private static Map<Integer, List<BroadcastSocketServer>> users = new ConcurrentHashMap<>();
+    private static Map<Integer, List<DiscussSocketServer>> users = new ConcurrentHashMap<>();
 
-    private static Log log = LogFactory.getLog(BroadcastSocketServer.class);
+    private static Log log = LogFactory.getLog(DiscussSocketServer.class);
 
     private static StudyRecordService recordService;
 
     @Autowired
     public void setService(StudyRecordService recordService) {
-        BroadcastSocketServer.recordService = recordService;
+        DiscussSocketServer.recordService = recordService;
     }
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") Integer userId,
-                       @PathParam("planetId") Integer planetId, @PathParam("userName") String userName,
-                       @PathParam("profileUrl") String profileUrl, @PathParam("type") int type) {
+    public void onOpen(Session session, @PathParam("userId") Integer userId, @PathParam("planetId") Integer planetId) {
         this.session = session;
         this.userId = userId;
         this.planetId = planetId;
-        this.type = type;
         this.isFrontCam = true;
-        String headshot = "http://106.13.41.151:8088/image/" + profileUrl;
         prevTime = System.currentTimeMillis();
+
         if (users.containsKey(planetId)) {  // 该星球已存在
             users.get(planetId).add(this);  // 存入该用户连接
         } else {  // 该星球未存在
-            List<BroadcastSocketServer> userList = new LinkedList<>();
+            List<DiscussSocketServer> userList = new LinkedList<>();
             userList.add(this);
             users.put(planetId, userList);
         }
-        log.info("User " + userId + ", broadcast connection success, online count: " + users.size());
+        log.info("User " + userId + ", group study connection success, online count: " + users.size());
 
         // 开启计时器
         timer = new Timer(true);
@@ -73,30 +70,21 @@ public class BroadcastSocketServer {
         };
         timer.scheduleAtFixedRate(task, new Date(), 1000);
 
-        // 0：不是主播  1：是主播
-        // 1. 通知其他用户 “我”(非主播) 加入了直播间
-        // 2. 获取主播摄像头状态
-        if (type == 0) {
-            // 通知其他用户 “我”(非主播) 加入了直播间
-            JSONObject jo = new JSONObject();
-            jo.put("id", 1);
-            jo.put("username", userName);
-            jo.put("userid", userId);
-            jo.put("headshot", headshot);
-            sendMessage(planetId, jo.toString());
-
-            // 获取主播摄像头状态
-            BroadcastSocketServer broadcaster = getBroadcaster(planetId);
-            if (broadcaster != null) {
-                JSONObject joCam = new JSONObject();
-                joCam.put("id", 4);
-                joCam.put("camstate", broadcaster.isFrontCam);
-                sendMessageTo(joCam.toString(), this);
-            }
-            else {
-                log.info("getBroadcaster(planetId) 获得的主播对象为空");
+        // 将聊天室内其他用户摄像头状态反馈
+        JSONArray arr = new JSONArray();
+        List<DiscussSocketServer> userList = users.get(planetId);
+        for (DiscussSocketServer user : userList) {
+            if (!user.equals(this)) {
+                JSONObject info = new JSONObject();
+                info.put("userId", user.userId);
+                info.put("camstate", user.isFrontCam);
+                arr.put(info);
             }
         }
+        JSONObject jsonBroadcast = new JSONObject();
+        jsonBroadcast.put("id", 1);
+        jsonBroadcast.put("info", arr);
+        sendMessageTo(jsonBroadcast.toString(), this);
     }
 
     @OnClose
@@ -108,7 +96,6 @@ public class BroadcastSocketServer {
         log.info("User " + userId + ", disconnect successfully");
         stopStudyBySocket(userId, planetId);
         timer.cancel();
-//        System.gc();
     }
 
     @OnError
@@ -130,31 +117,30 @@ public class BroadcastSocketServer {
     /**
      * 根据接收到的 id 执行相应动作
      * id == 0 --> 监测用户是否在线 (heartbeat)
-     * id == -1 --> 主播下线, 关闭星球内其他人的连接
-     * id == 2 --> 群发弹幕
-     * id == 4 --> 广播主播的摄像头状态
+     * id == 1 --> 修改该用户服务器中的摄像头状态，并将修改后的信息广播
      *
-     * @param jsonMsg 接收到的 JSON 字符串
+     * @param jsonMsg
      */
     private void myOnMessage(String jsonMsg) {
         log.info("User " + userId + ", received message: " + jsonMsg);
         JSONObject jo = new JSONObject(jsonMsg);
         Integer id = jo.getInt("id");
-        if (id.equals(0)) {  // id 为 0 时用于监测用户是否在线
+        if (id.equals(0)) {  // 监测用户是否在线 (heartbeat)
             prevTime = System.currentTimeMillis();
-        } else if (id.equals(-1)) {  // 主播下线
-            JSONObject jo2 = new JSONObject();
-            jo2.put("id", 3);
-            sendMessage(planetId, jo2.toString());
-        } else if (id.equals(2)) {  // 群发弹幕
-            String headshot = "http://106.13.41.151:8088/image/" + jo.getString("headshot");
-            jo.put("headshot", headshot);
-            sendMessage(planetId, jo.toString());
-        } else if (id.equals(4)) {  // 广播主播的摄像头状态
-            if (type == 1) {
-                isFrontCam = jo.getBoolean("camstate");
-                sendMessage(planetId, jo.toString());
+        } else if (id.equals(1)) {  // 修改该用户服务器中的摄像头状态，并将修改后的信息广播
+            isFrontCam = jo.getBoolean("camstate");
+            JSONArray arr = new JSONArray();
+            List<DiscussSocketServer> userList = users.get(planetId);
+            for (DiscussSocketServer user : userList) {
+                JSONObject info = new JSONObject();
+                info.put("userId", user.userId);
+                info.put("camstate", user.isFrontCam);
+                arr.put(info);
             }
+            JSONObject jsonBroadcast = new JSONObject();
+            jsonBroadcast.put("id", 1);
+            jsonBroadcast.put("info", arr);
+            sendMessage(planetId, jsonBroadcast.toString());
         }
     }
 
@@ -165,8 +151,8 @@ public class BroadcastSocketServer {
      * @param message
      */
     private void sendMessage(Integer planetId, String message) {
-        List<BroadcastSocketServer> userList = users.get(planetId);
-        for (BroadcastSocketServer user : userList) {
+        List<DiscussSocketServer> userList = users.get(planetId);
+        for (DiscussSocketServer user : userList) {
             if (user.equals(this)) continue;  // 不给自己发
             // 不能放在循环外面否则只能把消息发给第一个用户，其他用户收到的消息是空的
             ByteBuffer bBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
@@ -177,23 +163,18 @@ public class BroadcastSocketServer {
 
     /**
      * 将 message 发送给指定用户
+     *
      * @param message
      * @param dest
      */
-    private void sendMessageTo(String message, BroadcastSocketServer dest) {
+    private void sendMessageTo(String message, DiscussSocketServer dest) {
         ByteBuffer bBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
         dest.session.getAsyncRemote().sendBinary(bBuffer);
         log.info("User " + userId + ", sent message: " + message);
     }
 
     private void stopStudyBySocket(Integer userId, Integer planetId) {
-        Integer operation;
-        if (type == 1) {  // 主播
-            operation = 3;
-        } else {  // 普通用户
-            operation = 1;
-        }
-        int ret = recordService.stopStudy(userId, planetId, operation);
+        int ret = recordService.stopStudy(userId, planetId, 1);
         switch (ret) {
             case 0:
                 log.info("User " + userId + ", stop study successfully");
@@ -223,20 +204,5 @@ public class BroadcastSocketServer {
         if (currTime - prevTime > 10000) {
             onClose();
         }
-    }
-
-    /**
-     * 获取直播星球的主播
-     * @param planetId
-     * @return
-     */
-    private BroadcastSocketServer getBroadcaster(Integer planetId) {
-        List<BroadcastSocketServer> userList = users.get(planetId);
-        for (BroadcastSocketServer user : userList) {
-            if (user.type == 1) {
-                return user;
-            }
-        }
-        return null;
     }
 }

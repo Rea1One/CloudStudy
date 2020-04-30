@@ -57,7 +57,7 @@ public class WebSocketServer {
         prevTime = System.currentTimeMillis();
         // userId 用来表示唯一客户端，如果需要指定发送，需要指定发送通过 userId 来区分
         clients.put(userId, this);
-        log.info("User: " + userId + ", connect successfully, online count: " + clients.size());
+        log.info("User " + userId + ", normal connection success, online count: " + clients.size());
         timer = new Timer(true);
         TimerTask task = new TimerTask() {
             @Override
@@ -84,7 +84,7 @@ public class WebSocketServer {
 
     @OnMessage
     public void onMessage(byte[] message) {
-        log.info("Received message: " + new String(message, StandardCharsets.UTF_8));
+        log.info("User " + userId + ", received message: " + new String(message, StandardCharsets.UTF_8));
         prevTime = System.currentTimeMillis();
     }
 
@@ -93,22 +93,22 @@ public class WebSocketServer {
         int ret = recordService.stopStudy(userId, planetId, 1);
         switch (ret) {
             case 0:
-                log.info("User: " + userId + ", stop study successfully");
+                log.info("User " + userId + ", stop study successfully");
                 break;
             case -1:
-                log.info("User: " + userId + ", was not studying");
+                log.info("User " + userId + ", was not studying");
                 break;
             case -2:
-                log.info("User: " + userId + ", StudyRecord insertion failed");
+                log.info("User " + userId + ", StudyRecord insertion failed");
                 break;
             case -3:
-                log.info("User: " + userId + ", does not exist");
+                log.info("User " + userId + ", does not exist");
                 break;
             case -4:
-                log.info("User: " + userId + ", update study time failed");
+                log.info("User " + userId + ", update study time failed");
                 break;
             case -5:
-                log.info("User: " + userId + ", StudyRecord deletion failed");
+                log.info("User " + userId + ", StudyRecord deletion failed");
                 break;
             default:
                 break;
